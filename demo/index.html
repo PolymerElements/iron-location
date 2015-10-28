@@ -94,57 +94,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </template>
     <script>
-      Polymer({
-        is: 'iron-page-url-demo',
-        properties: {
-          paramsString: {
-            observer: 'paramsStringChanged'
+      window.addEventListener('WebComponentsReady', function() {
+        Polymer({
+          is: 'iron-page-url-demo',
+          properties: {
+            paramsString: {
+              observer: 'paramsStringChanged'
+            },
+            params: {
+              observer: 'paramsChanged'
+            },
+            paramsInvalid: {
+              value: false,
+            }
           },
-          params: {
-            observer: 'paramsChanged'
+          observers: [
+            'checkHistorySize(path, hash, paramsString)'
+          ],
+          ready: function() {
+            this.startingHistoryLength = window.history.length;
           },
-          paramsInvalid: {
-            value: false,
-          }
-        },
-        observers: [
-          'checkHistorySize(path, hash, paramsString)'
-        ],
-        ready: function() {
-          this.startingHistoryLength = window.history.length;
-        },
-        paramsStringChanged: function() {
-          if (this.ignore) {
-            return;
-          }
-          this.ignore = true;
-          try {
-            this.params = JSON.parse(this.paramsString);
+          paramsStringChanged: function() {
+            if (this.ignore) {
+              return;
+            }
+            this.ignore = true;
+            try {
+              this.params = JSON.parse(this.paramsString);
+              this.paramsInvalid = false;
+            } catch(_) {
+              this.paramsInvalid = true;
+            }
+            this.ignore = false;
+          },
+          paramsChanged: function() {
+            if (this.ignore) {
+              return;
+            }
+            this.ignore = true;
+            this.paramsString = JSON.stringify(this.params);
             this.paramsInvalid = false;
-          } catch(_) {
-            this.paramsInvalid = true;
+            this.ignore = false;
+          },
+          checkHistorySize: function() {
+            this.historyElementsAdded =
+                window.history.length - this.startingHistoryLength;
+          },
+          inSeconds: function(dwellTime) {
+            if (dwellTime === -1) {
+              return -1;
+            }
+            return (Math.round(dwellTime / 100) / 10)
           }
-          this.ignore = false;
-        },
-        paramsChanged: function() {
-          if (this.ignore) {
-            return;
-          }
-          this.ignore = true;
-          this.paramsString = JSON.stringify(this.params);
-          this.paramsInvalid = false;
-          this.ignore = false;
-        },
-        checkHistorySize: function() {
-          this.historyElementsAdded =
-              window.history.length - this.startingHistoryLength;
-        },
-        inSeconds: function(dwellTime) {
-          if (dwellTime === -1) {
-            return -1;
-          }
-          return (Math.round(dwellTime / 100) / 10)
-        }
+        });
       });
     </script>
   </dom-module>
