@@ -60,10 +60,6 @@ This element is only active while it is attached to the document.
         type: Number,
         value: -Infinity
       },
-      _dontUpdateUrl: {
-        type: Boolean,
-        value: false
-      }
     },
     hostAttributes: {
       hidden: true
@@ -127,7 +123,7 @@ This element is only active while it is attached to the document.
           window.location.hash
       );
       if (newUrl == currentUrl) {
-        // nothing to do, we're on the same page
+        // nothing to do, the URL didn't change
         return;
       }
 
