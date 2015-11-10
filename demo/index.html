@@ -14,10 +14,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../iron-page-url.html">
+  <link rel="import" href="../iron-query-params.html">
   <link rel="import" href="../../paper-styles/classes/typography.html">
   <link rel="import" href="../../iron-flex-layout/classes/iron-flex-layout.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-slider/paper-slider.html">
+  <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="stylesheet" href="../../paper-styles/demo.css">
 </head>
 <body>
@@ -55,9 +57,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin: 0;
         }
       </style>
-      <iron-page-url path='{{path}}' hash='{{hash}}' params='{{params}}'
+      <iron-page-url path='{{path}}' hash='{{hash}}' query='{{query}}'
                      dwell-time='{{dwellTime}}'>
       </iron-page-url>
+      <iron-query-params params-string='{{query}}' params-object='{{params}}'>
+      </iron-query-params>
 
       <div layout horizontal>
         <div layout vertical flex class='inputs'>
@@ -92,6 +96,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-slider>
         </div>
       </div>
+      <div layout horizontal flex>
+        <a href='#lolol'><paper-button raised>#lolol</paper-button></a>
+        <a href='?hi=there&some=none#wat_for'><div>{"hi": "there", "some": "none"}, #wat_for</div></a>
+      </div>
     </template>
     <script>
       Polymer({
@@ -105,6 +113,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           paramsInvalid: {
             value: false,
+          },
+          historyElementsAdded: {
+            type: Number
           }
         },
         observers: [

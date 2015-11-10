@@ -7,7 +7,7 @@ The `iron-page-url` element manages binding to and from the current URL.
 When the URL is: `/search?query=583#details` its properties will be:
 
   - path: `'/search'`
-  - params: `{query: '583'}`
+  - query: `query=583`
   - hash: `'details'`
 
 These bindings are bidirectional, so modifying them will in turn modify the URL.
@@ -31,10 +31,10 @@ This element is only active while it is attached to the document.
         notify: true
       },
       /**
-       * The GET params of the URL.
+       * The query string portion of the URL.
        */
-      params: {
-        type: Object,
+      query: {
+        type: String,
         notify: true
       },
       /**
@@ -56,6 +56,34 @@ This element is only active while it is attached to the document.
         type: Number,
         value: 2000
       },
+
+      /**
+       * A regexp that defines the set of URLs that should be considered part
+       * of this web app.
+       *
+       * Clicking on a link that matches this regex won't result in a full page
+       * navigation, but will instead just update the URL state in place.
+       *
+       * This regexp is given everything after the origin in an absolute
+       * URL. So to match just URLs that start with /search/ do:
+       *     url-space-regex="^/search/"
+       *
+       * @type {string|RegExp}
+       */
+      urlSpaceRegex: {
+        type: String,
+        value: ''
+      },
+
+      /**
+       * urlSpaceRegex, but coerced into a regexp.
+       *
+       * @type {RegExp}
+       */
+      _urlFilterRegExp: {
+        compute: '_makeRegExp(urlFilterExp)'
+      },
+
       _lastChangedAtAt: {
         type: Number,
         value: -Infinity
@@ -65,12 +93,13 @@ This element is only active while it is attached to the document.
       hidden: true
     },
     observers: [
-      '_updateUrl(path, params.*, hash)'
+      '_updateUrl(path, query, hash)'
     ],
     attached: function() {
       this.listen(window, 'hashchange', '_hashChanged');
       this.listen(window, 'location-changed', '_urlChanged');
       this.listen(window, 'popstate', '_urlChanged');
+      this.listen(document.body, 'click', '_globalOnClick');
 
       this._urlChanged();
     },
@@ -78,7 +107,13 @@ This element is only active while it is attached to the document.
       this.unlisten(window, 'hashchange', '_hashChanged');
       this.unlisten(window, 'location-changed', '_urlChanged');
       this.unlisten(window, 'popstate', '_urlChanged');
+      this.unlisten(document.body, 'click', '_globalOnClick');
     },
+    /**
+     * @return {number} the number of milliseconds since some point in the
+     *     past. Only useful for comparing against other results from this
+     *     function.
+     */
     _now: function() {
       if (window.performance && window.performance.now) {
         return window.performance.now();
@@ -93,19 +128,19 @@ This element is only active while it is attached to the document.
       // try to write anything back into it.
       //
       // i.e. without _dontUpdateUrl we'd overwrite the new path with the old
-      // one when we set this.hash. Likewise for params.
+      // one when we set this.hash. Likewise for query.
       this._dontUpdateUrl = true;
       this._hashChanged();
       this.path = window.location.pathname;
-      this.params = this._decodeParams(window.location.search.substring(1));
+      this.query = window.location.search.substring(1);
       this._dontUpdateUrl = false;
       this._updateUrl();
     },
     _getUrl: function() {
       var url = this.path;
-      var params = this._encodeParams(this.params);
-      if (params) {
-        url += '?' + params;
+      var query = this.query;
+      if (query) {
+        url += '?' + query;
       }
       if (this.hash) {
         url += '#' + this.hash;
@@ -136,33 +171,76 @@ This element is only active while it is attached to the document.
         window.history.pushState({}, '', newUrl);
       }
     },
-    _encodeParams: function(params) {
-      var encodedParams = [];
-      for (var key in params) {
-        var value = params[key];
-        if (value === '') {
-          encodedParams.push(encodeURIComponent(key));
-        } else if (value) {
-          encodedParams.push(
-              encodeURIComponent(key) +
-              '=' +
-              encodeURIComponent(value.toString())
-          );
-        }
+    /**
+     * A necessary evil so that links work as expected. Does its best to
+     * bail out early if possible.
+     *
+     * @param {MouseEvent} event .
+     */
+    _globalOnClick: function(event) {
+      var href = this._getSameOriginLinkHref(event);
+      if (!href) {
+        return;
       }
-      return encodedParams.join('&');
+
+      window.history.pushState({}, '', href);
+      this.fire('location-changed', {}, {node: window});
+      event.preventDefault();
     },
-    _decodeParams: function(paramString) {
-      var params = {};
-      var paramList = (paramString || '').split('&');
-      for (var i = 0; i < paramList.length; i++) {
-        var param = paramList[i].split('=');
-        if (param[0]) {
-          params[decodeURIComponent(param[0])] =
-              decodeURIComponent(param[1] || '');
+    /**
+     * Returns the absolute URL of the link (if any) that this click event
+     * is clicking on, if we can and should override the resulting full
+     * page navigation. Returns null otherwise.
+     *
+     * This method is separated away from _globalOnClick for testability,
+     * as we can't test that a clicked link should have resulted in navigating
+     * away from the test page.
+     *
+     * @param {MouseEvent} event .
+     * @return {string?} .
+     */
+    _getSameOriginLinkHref: function(event) {
+      // We only care about left-clicks.
+      if (event.button !== 0) {
+        return null;
+      }
+      // We don't want modified clicks, where the intent is to open the page
+      // in a new tab.
+      if (event.metaKey || event.ctrlKey) {
+        return null;
+      }
+      var eventPath = Polymer.dom(event).path;
+      var href = null;
+      for (var i = 0; i < eventPath.length; i++) {
+        var element = eventPath[i];
+        if (element.tagName === 'A' && element.href) {
+          href = element.href;
+          break;
         }
       }
-      return params;
+      // If there's no link there's nothing to do.
+      if (!href) {
+        return null;
+      }
+
+      // It only makes sense for us to intercept same-origin navigations.
+      // pushState/replaceState don't work with cross-origin links.
+      var url = new URL(href, document.baseURI);
+      if (url.origin !== window.location.origin) {
+        return null;
+      }
+      var normalizedHref = url.pathname + url.search + url.hash;
+
+      // If we've been configured not to handle this url... don't handle it!
+      if (this._urlFilterRegExp &&
+          !this._urlFilterRegExp.test(normalizedHref)) {
+        return null;
+      }
+
+      return normalizedHref;
+    },
+    _makeRegExp: function(urlFilterExp) {
+      return RegExp(urlFilterExp);
     }
   });
 </script>
