@@ -15,8 +15,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../iron-page-url.html">
   <link rel="import" href="../iron-query-params.html">
-  <link rel="import" href="../../paper-styles/classes/typography.html">
-  <link rel="import" href="../../iron-flex-layout/classes/iron-flex-layout.html">
+  <link rel="import" href="../../paper-styles/typography.html">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-slider/paper-slider.html">
   <link rel="import" href="../../paper-button/paper-button.html">
@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
-  <dom-module id='iron-page-url-demo'>
+  <dom-module id="iron-page-url-demo">
     <template>
       <style>
         div.inputs {
@@ -34,49 +34,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: inline-block;
           width: 100px;
         }
-        span.seconds {
-        }
-        [layout] {
-          @apply(--layout);
-        }
-        [layout][horizontal] {
-          @apply(--layout-horizontal);
-        }
-        [layout][horizontal] > div {
-          padding: 20px;
-          max-width: 500px;
-        }
-        [layout][vertical] {
-          @apply(--layout-vertical);
-        }
-        [layout][flex] {
-          @apply(--layout-flex);
-        }
+
         h3 {
           padding: 0;
           margin: 0;
         }
+
+        .inputs, .history_entries {
+          @apply(--layout-vertical);
+          @apply(--layout-flex);
+          padding: 20px;
+          max-width: 500px;
+        }
+
+        .container {
+          @apply(--layout-horizontal);
+        }
+
       </style>
-      <iron-page-url path='{{path}}' hash='{{hash}}' query='{{query}}'
-                     dwell-time='{{dwellTime}}'>
+      <iron-page-url path="{{path}}" hash="{{hash}}" query="{{query}}"
+                     dwell-time="{{dwellTime}}">
       </iron-page-url>
-      <iron-query-params params-string='{{query}}' params-object='{{params}}'>
+      <iron-query-params params-string="{{query}}" params-object="{{params}}">
       </iron-query-params>
 
-      <div layout horizontal>
-        <div layout vertical flex class='inputs'>
+      <div class="container">
+        <div class="inputs">
           <h3>URL</h3>
-          <paper-input label='path' value='{{path}}' always-float-label>
+          <paper-input label="path" value="{{path}}" always-float-label>
           </paper-input>
-          <paper-input label='hash' value='{{hash}}' always-float-label>
+          <paper-input label="hash" value="{{hash}}" always-float-label>
           </paper-input>
-          <paper-input label='params' value='{{paramsString}}'
-                       invalid='{{paramsInvalid}}'
-                       error-message='Should be legal JSON'
+          <paper-input label="params" value="{{paramsString}}"
+                       invalid="{{paramsInvalid}}"
+                       error-message="Should be legal JSON"
                        always-float-label>
           </paper-input>
         </div>
-        <div layout vertical flex class='history_entries'>
+        <div class="history_entries">
           <h3>Dwell Time</h3>
           <p>
             iron-page-url won't add extraneous entries to the browser's history when changes come in rapid fire.
@@ -91,14 +86,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <label>Dwell time:</label>
             {{inSeconds(dwellTime)}}s
           </div>
-          <paper-slider min="-1" max="5000" value='2000' step='100'
-                        immediate-value='{{dwellTime}}'>
+          <paper-slider min="-1" max="5000" value="2000" step="100"
+                        immediate-value="{{dwellTime}}">
           </paper-slider>
         </div>
       </div>
-      <div layout horizontal flex>
-        <a href='#lolol'><paper-button raised>#lolol</paper-button></a>
-        <a href='?hi=there&some=none#wat_for'><div>{"hi": "there", "some": "none"}, #wat_for</div></a>
+      <div class="container">
+        <a href="#lolol😹"><paper-button raised>#lolol😹</paper-button></a>
+        <a href="?hi=there&some=none#wat_for"><div>{"hi": "there", "some": "none"}, #wat_for</div></a>
       </div>
     </template>
     <script>
