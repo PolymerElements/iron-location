@@ -28,21 +28,30 @@ This element is only active while it is attached to the document.
        */
       path: {
         type: String,
-        notify: true
+        notify: true,
+        value: function() {
+          return window.location.pathname;
+        }
       },
       /**
        * The query string portion of the URL.
        */
       query: {
         type: String,
-        notify: true
+        notify: true,
+        value: function() {
+          return window.location.search.slice(1);
+        }
       },
       /**
        * The hash component of the URL.
        */
       hash: {
         type: String,
-        notify: true
+        notify: true,
+        value: function() {
+          return window.location.hash.slice(1);
+        }
       },
       /**
        * If the user was on a URL for less than `dwellTime` milliseconds, it
@@ -88,6 +97,11 @@ This element is only active while it is attached to the document.
         type: Number,
         value: -Infinity
       },
+
+      _initialized: {
+        type: Boolean,
+        value: false
+      }
     },
     hostAttributes: {
       hidden: true
@@ -102,12 +116,14 @@ This element is only active while it is attached to the document.
       this.listen(document.body, 'click', '_globalOnClick');
 
       this._urlChanged();
+      this._initialized = true;
     },
     detached: function() {
       this.unlisten(window, 'hashchange', '_hashChanged');
       this.unlisten(window, 'location-changed', '_urlChanged');
       this.unlisten(window, 'popstate', '_urlChanged');
       this.unlisten(document.body, 'click', '_globalOnClick');
+      this._initialized = false;
     },
     /**
      * @return {number} the number of milliseconds since some point in the
@@ -148,7 +164,7 @@ This element is only active while it is attached to the document.
       return url;
     },
     _updateUrl: function() {
-      if (this._dontUpdateUrl) {
+      if (this._dontUpdateUrl || !this._initialized) {
         return;
       }
       var newUrl = this._getUrl();
