@@ -23,7 +23,7 @@ routing system. This is a beta release of iron-page-url as we continue work
 on higher level elements, and as such iron-page-url may undergo breaking
 changes.
 
-==== Properties
+#### Properties
 
 When the URL is: `/search?query=583#details` iron-page-url's properties will be:
 
@@ -35,7 +35,7 @@ These bindings are bidirectional. Modifying them will in turn modify the URL.
 
 iron-page-url is only active while it is attached to the document.
 
-==== Links
+#### Links
 
 While iron-page-url is active in the document it will intercept clicks on links
 within your site, updating the URL pushing the updated URL out through the
@@ -44,7 +44,7 @@ open in the same window, so middle mouse clicks and ctrl/cmd clicks work fine.
 
 You can customize this behavior with the `urlSpaceRegex`.
 
-==== Dwell Time
+#### Dwell Time
 
 iron-page-url protects against accidental history spamming by only adding
 entries to the user's history if the URL stays unchanged for `dwellTime`
