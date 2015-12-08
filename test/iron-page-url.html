@@ -83,7 +83,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         anchor.href = '#/wat';
         document.body.appendChild(anchor);
         anchor.click();
-        expect(urlElem.hash).to.be.equal('/wat');
+        // In IE10 it appears that the hashchange event is asynchronous.
+        return timePasses(10).then(function() {
+          expect(urlElem.hash).to.be.equal('/wat');
+        });
       });
       test('basic functionality with paths', function() {
         // Initialized to the window location's path.

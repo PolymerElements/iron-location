@@ -82,18 +82,21 @@
         setup(function() {
           return getIframe().then(function(i) {
             iframe = i;
-            getMessageMatching(iframe, function(m) {return m.type === 'error'}).then(function(m) {
+            function isError(m) {return m.type === 'error'}
+            getMessageMatching(iframe, isError).then(function(m) {
               error = m.error;
             });
           });
         });
         teardown(function() {
-          document.body.removeChild(iframe);
+          if (iframe) {
+            document.body.removeChild(iframe);
+          }
           var e = error;
           iframe = null;
           error = null;
           if (e) {
-            throw new Error(e);
+            throw new Error('Error message from contained iframe: ' + e);
           }
         });
         var cases = [
@@ -120,7 +123,7 @@
             return getUrl(iframe).then(function(url) {
               expect(url.search).to.be.eq('');
               iframe.contentWindow.postMessage({type: 'appendBody', tagName: caseName}, '*');
-              return timePasses(30).then(function() {return getUrl(iframe)});
+              return timePasses(60).then(function() {return getUrl(iframe)});
             }).then(function(url) {
               expect(url.search).to.be.eq('?on-timeout');
             });
