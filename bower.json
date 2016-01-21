@@ -1,6 +1,6 @@
 {
   "name": "iron-page-url",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Bidirectional data binding into the page's URL.",
   "private": true,
   "authors": [
