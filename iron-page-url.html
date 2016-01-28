@@ -112,7 +112,7 @@ milliseconds.
        * @type {RegExp}
        */
       _urlSpaceRegExp: {
-        computed: '_makeRegExp(urlSpaceExp)'
+        computed: '_makeRegExp(urlSpaceRegex)'
       },
 
       _lastChangedAtAt: {
@@ -277,8 +277,8 @@ milliseconds.
 
       return normalizedHref;
     },
-    _makeRegExp: function(urlSpaceExp) {
-      return RegExp(urlSpaceExp);
+    _makeRegExp: function(urlSpaceRegex) {
+      return RegExp(urlSpaceRegex);
     }
   });
 </script>
