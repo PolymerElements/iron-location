@@ -272,9 +272,11 @@ milliseconds.
 
       // It only makes sense for us to intercept same-origin navigations.
       // pushState/replaceState don't work with cross-origin links.
-      var url = new URL(href);
+      var url;
       if (document.baseURI != null) {
         url = new URL(href, /** @type {string} */(document.baseURI));
+      } else {
+        url = new URL(href);
       }
 
       if (url.origin !== window.location.origin) {
