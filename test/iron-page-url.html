@@ -19,6 +19,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../iron-page-url.html">
 </head>
 <body>
+<test-fixture id='Solo'>
+  <template>
+    <iron-page-url></iron-page-url>
+  </template>
+</test-fixture>
+<test-fixture id='Together'>
+  <template>
+    <div>
+      <iron-page-url id='one'></iron-page-url>
+      <iron-page-url id='two'></iron-page-url>
+    </div>
+  </template>
+</test-fixture>
+
 
 <script>
   'use strict';
@@ -64,11 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('when used solo', function() {
       var urlElem;
       setup(function() {
-        urlElem = document.createElement('iron-page-url');
-        urlElem.attached();
-      });
-      teardown(function() {
-        urlElem.detached();
+        urlElem = fixture('Solo');
       });
       test('basic functionality with #hash urls', function() {
         // Initialized to the window location's hash.
@@ -122,14 +132,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var otherUrlElem;
       var urlElem;
       setup(function() {
-        urlElem = document.createElement('iron-page-url');
-        urlElem.attached();
-        otherUrlElem = document.createElement('iron-page-url');
-        otherUrlElem.attached();
-      });
-      teardown(function() {
-        otherUrlElem.detached();
-        urlElem.detached();
+        var elems = fixture('Together');
+        urlElem = elems.querySelector('#one');
+        otherUrlElem = elems.querySelector('#two');
       });
       function assertHaveSameUrls(urlElemOne, urlElemTwo) {
         expect(urlElemOne.path).to.be.equal(urlElemTwo.path);
