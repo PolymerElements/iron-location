@@ -118,6 +118,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '?greeting=hello&target=world&another=key');
       });
     });
+    suite('when used with other iron-page-url elements', function() {
+      var otherUrlElem;
+      var urlElem;
+      setup(function() {
+        urlElem = document.createElement('iron-page-url');
+        urlElem.attached();
+        otherUrlElem = document.createElement('iron-page-url');
+        otherUrlElem.attached();
+      });
+      teardown(function() {
+        otherUrlElem.detached();
+        urlElem.detached();
+      });
+      function assertHaveSameUrls(urlElemOne, urlElemTwo) {
+        expect(urlElemOne.path).to.be.equal(urlElemTwo.path);
+        expect(urlElemOne.hash).to.be.equal(urlElemTwo.hash);
+        expect(urlElemOne.query).to.be.equal(urlElemTwo.query);
+      }
+      test('coordinate their changes (by firing events on window)', function() {
+        assertHaveSameUrls(urlElem, otherUrlElem);
+
+        urlElem.path = '/a/b/c';
+        assertHaveSameUrls(urlElem, otherUrlElem);
+
+        otherUrlElem.query = 'alsdkjflaksjfd=alksjfdlkajsdfl';
+        assertHaveSameUrls(urlElem, otherUrlElem);
+
+        urlElem.hash = 'lkjljifosjkldfjlksjfldsjf';
+        assertHaveSameUrls(urlElem, otherUrlElem);
+      });
+    });
   });
 
 </script>

@@ -217,6 +217,7 @@ milliseconds.
       } else {
         window.history.pushState({}, '', newUrl);
       }
+      this.fire('location-changed', {}, {node: window});
     },
     /**
      * A necessary evil so that links work as expected. Does its best to
