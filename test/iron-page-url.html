@@ -13,14 +13,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
-  <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="../iron-page-url.html">
 </head>
 <body>
+<test-fixture id='Solo'>
+  <template>
+    <iron-page-url></iron-page-url>
+  </template>
+</test-fixture>
+<test-fixture id='Together'>
+  <template>
+    <div>
+      <iron-page-url id='one'></iron-page-url>
+      <iron-page-url id='two'></iron-page-url>
+    </div>
+  </template>
+</test-fixture>
+
 
 <script>
   'use strict';
@@ -66,11 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('when used solo', function() {
       var urlElem;
       setup(function() {
-        urlElem = document.createElement('iron-page-url');
-        urlElem.attached();
-      });
-      teardown(function() {
-        urlElem.detached();
+        urlElem = fixture('Solo');
       });
       test('basic functionality with #hash urls', function() {
         // Initialized to the window location's hash.
@@ -85,7 +93,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         anchor.href = '#/wat';
         document.body.appendChild(anchor);
         anchor.click();
-        expect(urlElem.hash).to.be.equal('/wat');
+        // In IE10 it appears that the hashchange event is asynchronous.
+        return timePasses(10).then(function() {
+          expect(urlElem.hash).to.be.equal('/wat');
+        });
       });
       test('basic functionality with paths', function() {
         // Initialized to the window location's path.
@@ -103,58 +114,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
       test('basic functionality with ?key=value params', function() {
         // Initialized to the window location's params.
-        expect(urlElem.params).to.deep.eq({});
+        expect(urlElem.query).to.be.eq('');
 
         // Changing location.search and sending a custom event on the window
         // changes the urlElem.
         window.history.replaceState({}, '', '/?greeting=hello&target=world');
         window.dispatchEvent(new CustomEvent('location-changed'));
-        expect(urlElem.params).to.deep.equal(
-            {greeting: 'hello', target: 'world'});
+        expect(urlElem.query).to.be.equal('greeting=hello&target=world');
 
-        // Changing the urlElem's path changes the URL.
-        urlElem.set('params.another', 'key');
+        // Changing the urlElem's query changes the URL.
+        urlElem.query = 'greeting=hello&target=world&another=key';
         expect(window.location.search).to.be.equal(
             '?greeting=hello&target=world&another=key');
       });
-      test('encoding of params', function() {
-        var mappings = [
-          {
-            string: '?a=b',
-            object: {'a': 'b'}
-          },
-          {
-            string: '?debug&ok',
-            object: {'debug': '', 'ok': ''}
-          },
-          {
-            string: '?monster%20kid%3A=%F0%9F%98%BF',
-            object: {'monster kid:': '😿'}
-          },
-          {
-            string: '?yes%2C%20ok%3F%20what%20is%20up%20with%20%CB%9Athiiis%CB%9A=%E2%98%83',
-            object: {'yes, ok? what is up with ˚thiiis˚': '☃'}
-          },
-        ]
+    });
+    suite('when used with other iron-page-url elements', function() {
+      var otherUrlElem;
+      var urlElem;
+      setup(function() {
+        var elems = fixture('Together');
+        urlElem = elems.querySelector('#one');
+        otherUrlElem = elems.querySelector('#two');
+      });
+      function assertHaveSameUrls(urlElemOne, urlElemTwo) {
+        expect(urlElemOne.path).to.be.equal(urlElemTwo.path);
+        expect(urlElemOne.hash).to.be.equal(urlElemTwo.hash);
+        expect(urlElemOne.query).to.be.equal(urlElemTwo.query);
+      }
+      test('coordinate their changes (by firing events on window)', function() {
+        assertHaveSameUrls(urlElem, otherUrlElem);
 
-        mappings.forEach(function(mapping) {
-          // Clear
-          urlElem.params = {};
-          expect(window.location.search).to.be.equal('');
+        urlElem.path = '/a/b/c';
+        assertHaveSameUrls(urlElem, otherUrlElem);
 
-          // Test going from string to object
-          window.history.replaceState({}, '', mapping.string);
-          window.dispatchEvent(new CustomEvent('location-changed'));
-          expect(urlElem.params).to.deep.equal(mapping.object);
+        otherUrlElem.query = 'alsdkjflaksjfd=alksjfdlkajsdfl';
+        assertHaveSameUrls(urlElem, otherUrlElem);
 
-          // Clear again.
-          urlElem.params = {};
-          expect(window.location.search).to.be.equal('');
-
-          // Test going from object to string
-          urlElem.params = mapping.object;
-          expect(window.location.search).to.be.equal(mapping.string);
-        });
+        urlElem.hash = 'lkjljifosjkldfjlksjfldsjf';
+        assertHaveSameUrls(urlElem, otherUrlElem);
       });
     });
   });
