@@ -1,6 +1,7 @@
 <!doctype html>
 <!--
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
@@ -10,20 +11,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html>
 <head>
 
-  <title>iron-page-url</title>
+  <title>iron-location</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../iron-page-url.html">
-  <link rel="import" href="../../paper-styles/typography.html">
-  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../iron-location.html">
+  <link rel="import" href="../iron-query-params.html">
+  <link rel="import" href="../../paper-styles/classes/typography.html">
+  <link rel="import" href="../../iron-flex-layout/classes/iron-flex-layout.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-slider/paper-slider.html">
   <link rel="stylesheet" href="../../paper-styles/demo.css">
 </head>
 <body>
 
-  <dom-module id="iron-page-url-demo">
+  <dom-module id="iron-location-demo">
     <template>
       <style>
         div.inputs {
@@ -50,9 +52,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           @apply(--layout-horizontal);
         }
       </style>
-      <iron-page-url path="{{path}}" hash="{{hash}}" query="{{query}}"
+      <iron-location path="{{path}}" hash="{{hash}}" query="{{query}}"
                      dwell-time="{{dwellTime}}">
-      </iron-page-url>
+      </iron-location>
+      <iron-query-params params-string='{{query}}' params-object='{{params}}'>
+      </iron-query-params>
 
       <div class="container">
         <div class="inputs">
@@ -61,18 +65,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-input>
           <paper-input label="hash" value="{{hash}}" always-float-label>
           </paper-input>
-          <paper-input label='query' value='{{query}}' always-float-label>
+          <paper-input label='params' value='{{paramsString}}'
+                       invalid='{{paramsInvalid}}'
+                       error-message='Should be legal JSON'
+                       always-float-label>
           </paper-input>
         </div>
         <div class="history_entries">
           <h3>Dwell Time</h3>
           <p>
-            iron-page-url won't add extraneous entries to the browser's history
+            iron-location won't add extraneous entries to the browser's history
             when changes come in quick succession.
           </p>
-          <p>
-            A new history entry will only be added if iron-query-url stays in
-            the same state longer than dwellTime.
+          <p>A new history entry will only be added if it stays in the same state longer than dwellTime.
           </p>
           <div>
             <label>History added: </label>
@@ -87,20 +92,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-slider>
         </div>
       </div>
+      <div layout horizontal flex>
+        <a href='#lolol'><paper-button raised>#lolol</paper-button></a>
+        <a href='?hi=there&some=none#wat_for'><div>{"hi": "there", "some": "none"}, #wat_for</div></a>
+      </div>
     </template>
     <script>
       Polymer({
-        is: 'iron-page-url-demo',
+        is: 'iron-location-demo',
         properties: {
+          paramsString: {
+            observer: 'paramsStringChanged'
+          },
+          params: {
+            observer: 'paramsChanged'
+          },
+          paramsInvalid: {
+            value: false,
+          },
           historyElementsAdded: {
             type: Number
           }
         },
         observers: [
-          'checkHistorySize(path, hash, query, startingHistoryLength)'
+          'checkHistorySize(path, hash, paramsString)'
         ],
         ready: function() {
           this.startingHistoryLength = window.history.length;
+        },
+        paramsStringChanged: function() {
+          if (this.ignore) {
+            return;
+          }
+          this.ignore = true;
+          try {
+            this.params = JSON.parse(this.paramsString);
+            this.paramsInvalid = false;
+          } catch(_) {
+            this.paramsInvalid = true;
+          }
+          this.ignore = false;
+        },
+        paramsChanged: function() {
+          if (this.ignore) {
+            return;
+          }
+          this.ignore = true;
+          this.paramsString = JSON.stringify(this.params);
+          this.paramsInvalid = false;
+          this.ignore = false;
         },
         checkHistorySize: function() {
           this.historyElementsAdded =
@@ -116,6 +156,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </script>
   </dom-module>
 
-  <iron-page-url-demo></iron-page-url-demo>
+  <iron-location-demo></iron-location-demo>
 </body>
 </html>
