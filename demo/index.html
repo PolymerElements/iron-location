@@ -11,11 +11,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html>
 <head>
 
-  <title>iron-page-url</title>
+  <title>iron-location</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../iron-page-url.html">
+  <link rel="import" href="../iron-location.html">
   <link rel="import" href="../iron-query-params.html">
   <link rel="import" href="../../paper-styles/classes/typography.html">
   <link rel="import" href="../../iron-flex-layout/classes/iron-flex-layout.html">
@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
-  <dom-module id="iron-page-url-demo">
+  <dom-module id="iron-location-demo">
     <template>
       <style>
         div.inputs {
@@ -52,9 +52,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           @apply(--layout-horizontal);
         }
       </style>
-      <iron-page-url path="{{path}}" hash="{{hash}}" query="{{query}}"
+      <iron-location path="{{path}}" hash="{{hash}}" query="{{query}}"
                      dwell-time="{{dwellTime}}">
-      </iron-page-url>
+      </iron-location>
       <iron-query-params params-string='{{query}}' params-object='{{params}}'>
       </iron-query-params>
 
@@ -74,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="history_entries">
           <h3>Dwell Time</h3>
           <p>
-            iron-page-url won't add extraneous entries to the browser's history
+            iron-location won't add extraneous entries to the browser's history
             when changes come in quick succession.
           </p>
           <p>A new history entry will only be added if it stays in the same state longer than dwellTime.
@@ -99,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
     <script>
       Polymer({
-        is: 'iron-page-url-demo',
+        is: 'iron-location-demo',
         properties: {
           paramsString: {
             observer: 'paramsStringChanged'
@@ -156,6 +156,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </script>
   </dom-module>
 
-  <iron-page-url-demo></iron-page-url-demo>
+  <iron-location-demo></iron-location-demo>
 </body>
 </html>
