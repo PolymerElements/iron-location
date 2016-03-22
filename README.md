@@ -2,7 +2,7 @@
 <!---
 
 This README is automatically generated from the comments in these files:
-iron-page-url.html
+iron-location.html
 
 Edit those files, and our readme bot will duplicate them over here!
 Edit this file, and the bot will squash your changes :)
@@ -12,23 +12,23 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build status](https://travis-ci.org/PolymerElements/iron-page-url.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-page-url)
+[![Build status](https://travis-ci.org/PolymerElements/iron-location.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-location)
 
-_[Demo and API docs](https://elements.polymer-project.org/elements/iron-page-url)_
+_[Demo and API docs](https://elements.polymer-project.org/elements/iron-location)_
 
 
-##&lt;iron-page-url&gt;
+##&lt;iron-location&gt;
 
-The `iron-page-url` element manages binding to and from the current URL.
+The `iron-location` element manages binding to and from the current URL.
 
-iron-page-url is the first, and lowest level element in the Polymer team's
-routing system. This is a beta release of iron-page-url as we continue work
-on higher level elements, and as such iron-page-url may undergo breaking
+iron-location is the first, and lowest level element in the Polymer team's
+routing system. This is a beta release of iron-location as we continue work
+on higher level elements, and as such iron-location may undergo breaking
 changes.
 
 #### Properties
 
-When the URL is: `/search?query=583#details` iron-page-url's properties will be:
+When the URL is: `/search?query=583#details` iron-location's properties will be:
 
 * path: `'/search'`
 * query: `'query=583'`
@@ -36,21 +36,19 @@ When the URL is: `/search?query=583#details` iron-page-url's properties will be:
 
 These bindings are bidirectional. Modifying them will in turn modify the URL.
 
-iron-page-url is only active while it is attached to the document.
+iron-location is only active while it is attached to the document.
 
 #### Links
 
-While iron-page-url is active in the document it will intercept clicks on links
+While iron-location is active in the document it will intercept clicks on links
 within your site, updating the URL pushing the updated URL out through the
-databinding system. iron-page-url only intercepts clicks with the intent to
+databinding system. iron-location only intercepts clicks with the intent to
 open in the same window, so middle mouse clicks and ctrl/cmd clicks work fine.
 
 You can customize this behavior with the `urlSpaceRegex`.
 
 #### Dwell Time
 
-iron-page-url protects against accidental history spamming by only adding
+iron-location protects against accidental history spamming by only adding
 entries to the user's history if the URL stays unchanged for `dwellTime`
 milliseconds.
-
-

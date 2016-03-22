@@ -10,26 +10,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-  <title>iron-page-url</title>
+  <title>iron-location</title>
 
   <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
 
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
-  <link rel="import" href="../iron-page-url.html">
+  <link rel="import" href="../iron-location.html">
 </head>
 <body>
 <test-fixture id='Solo'>
   <template>
-    <iron-page-url></iron-page-url>
+    <iron-location></iron-location>
   </template>
 </test-fixture>
 <test-fixture id='Together'>
   <template>
     <div>
-      <iron-page-url id='one'></iron-page-url>
-      <iron-page-url id='two'></iron-page-url>
+      <iron-location id='one'></iron-location>
+      <iron-location id='two'></iron-location>
     </div>
   </template>
 </test-fixture>
@@ -46,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   }
 
-  suite('<iron-page-url>', function () {
+  suite('<iron-location>', function () {
     var initialUrl;
     setup(function() {
       initialUrl = window.location.href;
@@ -108,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '?greeting=hello&target=world&another=key');
       });
     });
-    suite('when used with other iron-page-url elements', function() {
+    suite('when used with other iron-location elements', function() {
       var otherUrlElem;
       var urlElem;
       setup(function() {
