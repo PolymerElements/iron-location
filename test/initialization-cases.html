@@ -253,7 +253,10 @@
   <script>Polymer({
     is: 'timeout-container',
     properties: {
-      val: {type: String}
+      val: {
+        type: String,
+        notify: true
+      }
     },
     attached: function() {
       setTimeout(function() {
