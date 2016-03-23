@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel='import' href='../iron-page-url.html'>
+<link rel='import' href='../iron-location.html'>
 <link rel='import' href='../../polymer/polymer.html'>
 
 <script>
@@ -73,7 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='default-before'>
   <template>
     <default-value value='{{val}}'></default-value>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
 
   </template>
   <script>Polymer({is: 'default-before', properties: {val: {type: String}}});</script>
@@ -82,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='attached-before'>
   <template>
     <on-attached val='{{val}}'></on-attached>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>Polymer({is: 'attached-before', properties: {val: {type: String}}});</script>
 </dom-module>
@@ -90,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='ready-before'>
   <template>
     <on-ready val='{{val}}'></on-ready>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>Polymer({is: 'ready-before', properties: {val: {type: String}}});</script>
 </dom-module>
@@ -98,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='timeout-before'>
   <template>
     <on-timeout val='{{val}}'></on-timeout>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>Polymer({is: 'timeout-before', properties: {val: {type: String}}});</script>
 </dom-module>
@@ -106,7 +106,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='default-after'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
     <default-value value='{{val}}'></default-value>
   </template>
   <script>Polymer({is: 'default-after', properties: {val: {type: String}}});</script>
@@ -114,7 +114,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='attached-after'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
     <on-attached val='{{val}}'></on-attached>
   </template>
   <script>Polymer({is: 'attached-after', properties: {val: {type: String}}});</script>
@@ -122,7 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='ready-after'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
     <on-ready val='{{val}}'></on-ready>
   </template>
   <script>Polymer({is: 'ready-after', properties: {val: {type: String}}});</script>
@@ -130,7 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='timeout-after'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
     <on-timeout val='{{val}}'></on-timeout>
   </template>
   <script>Polymer({is: 'timeout-after', properties: {val: {type: String}}});</script>
@@ -139,36 +139,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='default-below'>
   <template>
-    <iron-page-url query='{{val}}'>
+    <iron-location query='{{val}}'>
       <default-value value='{{val}}'></default-value>
-    </iron-page-url>
+    </iron-location>
   </template>
   <script>Polymer({is: 'default-below', properties: {val: {type: String}}});</script>
 </dom-module>
 
 <dom-module id='attached-below'>
   <template>
-    <iron-page-url query='{{val}}'>
+    <iron-location query='{{val}}'>
       <on-attached val='{{val}}'></on-attached>
-    </iron-page-url>
+    </iron-location>
   </template>
   <script>Polymer({is: 'attached-below', properties: {val: {type: String}}});</script>
 </dom-module>
 
 <dom-module id='ready-below'>
   <template>
-    <iron-page-url query='{{val}}'>
+    <iron-location query='{{val}}'>
       <on-ready val='{{val}}'></on-ready>
-    </iron-page-url>
+    </iron-location>
   </template>
   <script>Polymer({is: 'ready-below', properties: {val: {type: String}}});</script>
 </dom-module>
 
 <dom-module id='timeout-below'>
   <template>
-    <iron-page-url query='{{val}}'>
+    <iron-location query='{{val}}'>
       <on-timeout val='{{val}}'></on-timeout>
-    </iron-page-url>
+    </iron-location>
   </template>
   <script>Polymer({is: 'timeout-below', properties: {val: {type: String}}});</script>
 </dom-module>
@@ -177,7 +177,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='default-above'>
   <template>
     <default-value value='{{val}}'>
-      <iron-page-url query='{{val}}'></iron-page-url>
+      <iron-location query='{{val}}'></iron-location>
     </default-value>
   </template>
   <script>Polymer({is: 'default-above', properties: {val: {type: String}}});</script>
@@ -186,8 +186,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='attached-above'>
   <template>
     <on-attached val='{{val}}'>
-      <iron-page-url query='{{val}}'>
-      </iron-page-url>
+      <iron-location query='{{val}}'>
+      </iron-location>
     </on-attached>
   </template>
   <script>Polymer({is: 'attached-above', properties: {val: {type: String}}});</script>
@@ -196,8 +196,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='ready-above'>
   <template>
     <on-ready val='{{val}}'>
-      <iron-page-url query='{{val}}'>
-      </iron-page-url>
+      <iron-location query='{{val}}'>
+      </iron-location>
     </on-ready>
   </template>
   <script>Polymer({is: 'ready-above', properties: {val: {type: String}}});</script>
@@ -206,7 +206,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id='timeout-above'>
   <template>
     <on-timeout val='{{val}}'>
-      <iron-page-url query='{{val}}'></iron-page-url>
+      <iron-location query='{{val}}'></iron-location>
     </on-timeout>
   </template>
   <script>Polymer({is: 'timeout-above', properties: {val: {type: String}}});</script>
@@ -215,7 +215,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='default-container'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>
     Polymer({
@@ -227,7 +227,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='attached-container'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>
     Polymer({
@@ -244,7 +244,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='ready-container'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>
     Polymer({
@@ -258,7 +258,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id='timeout-container'>
   <template>
-    <iron-page-url query='{{val}}'></iron-page-url>
+    <iron-location query='{{val}}'></iron-location>
   </template>
   <script>Polymer({
     is: 'timeout-container',

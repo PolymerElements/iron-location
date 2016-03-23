@@ -1,5 +1,5 @@
 {
-  "name": "iron-page-url",
+  "name": "iron-location",
   "version": "0.7.3",
   "description": "Bidirectional data binding into the page's URL.",
   "private": true,
@@ -11,13 +11,13 @@
     "polymer",
     "routing"
   ],
-  "main": "iron-page-url.html",
+  "main": "iron-location.html",
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/iron-page-url.git"
+    "url": "git://github.com/PolymerElements/iron-location.git"
   },
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/PolymerElements/iron-page-url",
+  "homepage": "https://github.com/PolymerElements/iron-location",
   "ignore": [],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0"
