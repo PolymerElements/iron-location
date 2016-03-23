@@ -2,7 +2,7 @@
 <!---
 
 This README is automatically generated from the comments in these files:
-iron-location.html
+iron-location.html  iron-query-params.html
 
 Edit those files, and our readme bot will duplicate them over here!
 Edit this file, and the bot will squash your changes :)
@@ -12,9 +12,9 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build status](https://travis-ci.org/PolymerElements/iron-location.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-location)
+[![Build status](https://travis-ci.org/PolymerElements/iron-page-url.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-page-url)
 
-_[Demo and API docs](https://elements.polymer-project.org/elements/iron-location)_
+_[Demo and API docs](https://elements.polymer-project.org/elements/iron-page-url)_
 
 
 ##&lt;iron-location&gt;
@@ -52,3 +52,7 @@ You can customize this behavior with the `urlSpaceRegex`.
 iron-location protects against accidental history spamming by only adding
 entries to the user's history if the URL stays unchanged for `dwellTime`
 milliseconds.
+
+
+
+<!-- No docs for <iron-query-params> found. -->
