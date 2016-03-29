@@ -11,7 +11,10 @@
     "polymer",
     "routing"
   ],
-  "main": "iron-location.html",
+  "main": [
+    "iron-location.html",
+    "iron-query-params.html"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/iron-location.git"
