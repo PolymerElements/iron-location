@@ -1,0 +1,59 @@
+<dom-module id='redirect-hash'>
+  <template>
+    <iron-location hash='{{hash}}'></iron-location>
+  </template>
+  <script>
+    Polymer({
+      is: 'redirect-hash',
+      properties: {
+        hash: {
+          value: '',
+          observer: 'hashChanged'
+        }
+      },
+      hashChanged: function(hash) {
+        this.hash = 'redirectedTo';
+      }
+    });
+  </script>
+</dom-module>
+
+<dom-module id='redirect-path'>
+  <template>
+    <iron-location path='{{path}}'></iron-location>
+  </template>
+  <script>
+    Polymer({
+      is: 'redirect-path',
+      properties: {
+        path: {
+          value: '',
+          observer: 'pathChanged'
+        }
+      },
+      pathChanged: function(path) {
+        this.path = '/redirectedTo';
+      }
+    });
+  </script>
+</dom-module>
+
+<dom-module id='redirect-query'>
+  <template>
+    <iron-location query='{{query}}'></iron-location>
+  </template>
+  <script>
+    Polymer({
+      is: 'redirect-query',
+      properties: {
+        query: {
+          value: '',
+          observer: 'queryChanged'
+        }
+      },
+      queryChanged: function(query) {
+        this.query = 'redirectedTo';
+      }
+    });
+  </script>
+</dom-module>
