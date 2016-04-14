@@ -147,8 +147,8 @@ milliseconds.
       this.listen(window, 'popstate', '_urlChanged');
       this.listen(/** @type {!HTMLBodyElement} */(document.body), 'click', '_globalOnClick');
 
-      this._urlChanged();
       this._initialized = true;
+      this._urlChanged();
     },
     detached: function() {
       this.unlisten(window, 'hashchange', '_hashChanged');
