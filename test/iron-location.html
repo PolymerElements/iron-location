@@ -61,15 +61,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   }
 
-  suite('<iron-location>', function () {
-    var initialUrl;
-    setup(function() {
-      initialUrl = window.location.href;
-    });
-    teardown(function(){
-      window.history.replaceState({}, '', initialUrl);
-    });
+  // A window.history.replaceState wrapper that's smart about baseURI.
+  function replaceState(url) {
+    window.history.replaceState(
+        {}, '', window.location.protocol + '//' + window.location.host + url);
+  }
 
+  /**
+   * We run the iron location tests with a couple different page configurations
+   * (e.g. with and withoug a base URI), so we define the test set as a function
+   * that we call in each of these configurations.
+   */
+  function ironLocationTests() {
     suite('when used solo', function() {
       var urlElem;
       setup(function() {
@@ -85,7 +88,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Changing the hash via normal means changes the urlElem.
         var anchor = document.createElement('a');
-        anchor.href = '#/wat';
+        var base =
+            window.location.protocol + '//' + window.location.host +
+            window.location.pathname;
+        anchor.href = base + '#/wat';
         document.body.appendChild(anchor);
         anchor.click();
         // In IE10 it appears that the hashchange event is asynchronous.
@@ -103,9 +109,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Changing the path and sending a custom event on the window changes
         // the urlElem.
-        window.history.replaceState({}, '', '/baz')
+        replaceState('/baz');
         window.dispatchEvent(new CustomEvent('location-changed'));
         expect(urlElem.path).to.be.equal('/baz');
+      });
+      test('assigning to a relative path URL', function() {
+        urlElem.path = '/foo/bar';
+        expect(window.location.pathname).to.be.equal('/foo/bar');
+
+        // A relative path is treated as an absolute one, just with a
+        // missing leading slash.
+        urlElem.path = 'baz';
+        expect(window.location.pathname).to.be.equal('/baz');
       });
       test('basic functionality with ?key=value params', function() {
         // Initialized to the window location's params.
@@ -113,7 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Changing location.search and sending a custom event on the window
         // changes the urlElem.
-        window.history.replaceState({}, '', '/?greeting=hello&target=world');
+        replaceState('/?greeting=hello&target=world');
         window.dispatchEvent(new CustomEvent('location-changed'));
         expect(urlElem.query).to.be.equal('greeting=hello&target=world');
 
@@ -149,6 +164,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         assertHaveSameUrls(urlElem, otherUrlElem);
       });
     });
+
     suite('supports doing synchronous redirection', function() {
       test('of the hash portion of the URL', function() {
         expect(window.location.hash).to.be.equal('');
@@ -165,7 +181,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var redirector = fixture('RedirectPath');
         expect(window.location.pathname).to.be.equal('/redirectedTo');
         expect(redirector.path).to.be.equal('/redirectedTo');
-        redirector.path = 'newPath';
+        redirector.path = '/newPath';
         expect(window.location.pathname).to.be.equal('/redirectedTo');
         expect(redirector.path).to.be.equal('/redirectedTo');
       });
@@ -179,8 +195,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         expect(window.location.search).to.be.equal('?redirectedTo');
         expect(redirector.query).to.be.equal('redirectedTo');
       });
+    });
+  }
 
-    })
+  suite('<iron-location>', function () {
+    var initialUrl;
+    setup(function() {
+      initialUrl = window.location.href;
+    });
+    teardown(function(){
+      window.history.replaceState({}, '', initialUrl);
+    });
+
+    ironLocationTests();
+
+    suite('with a base URI', function() {
+      var baseElem;
+      setup(function() {
+        expect(document.baseURI).to.be.equal(window.location.href);
+        baseElem = document.createElement('base');
+        var href = 'https://example.com/i/dont/exist/obviously'
+        baseElem.href = href;
+        document.head.appendChild(baseElem);
+        expect(document.baseURI).to.be.equal(href);
+      });
+      teardown(function() {
+        document.head.removeChild(baseElem);
+      });
+
+      ironLocationTests();
+    });
   });
 
 </script>
