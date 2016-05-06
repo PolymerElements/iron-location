@@ -185,8 +185,8 @@ milliseconds.
       this._updateUrl();
     },
     _getUrl: function() {
-      var url = this.path;
-      var query = this.query;
+      var url = this.path.replace(/#/g, '%23').replace(/\?/g, '%3F');
+      var query = this.query.replace(/#/g, '%23');
       if (query) {
         url += '?' + query;
       }
@@ -199,6 +199,7 @@ milliseconds.
       if (this._dontUpdateUrl || !this._initialized) {
         return;
       }
+      debugger;
       var newUrl = this._getUrl();
       var currentUrl = (
           window.location.pathname +

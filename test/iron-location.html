@@ -116,6 +116,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.dispatchEvent(new CustomEvent('location-changed'));
         expect(urlElem.path).to.be.equal('/baz');
       });
+      var unusualPathNames = {
+        '/foo#bar': '/foo%23bar',
+        '/foo?xyz': '/foo%3Fxyz',
+        '/foo bar': '/foo%20bar',
+      };
+      // test('setting .path to a string with unusual characters', function() {
+      //   for (var plainTextPath in unusualPathNames) {
+      //     var encodedPath = unusualPathNames[plainTextPath];
+      //
+      //     debugger;
+      //     urlElem.path = plainTextPath;
+      //     expect(window.location.pathname).to.be.equal(encodedPath);
+      //     expect(urlElem.path).to.be.equal(plainTextPath);
+      //   }
+      // });
+      // test('receiving an unusual pathname from window.location', function() {
+      //   for (var plainTextPath in unusualPathNames) {
+      //     var encodedPath = unusualPathNames[plainTextPath];
+      //
+      //     debugger;
+      //     replaceState(encodedPath);
+      //     window.dispatchEvent(new CustomEvent('location-changed'));
+      //     expect(window.location.pathname).to.be.equal(encodedPath);
+      //     expect(urlElem.path).to.be.equal(plainTextPath);
+      //   }
+      // });
       test('assigning to a relative path URL', function() {
         urlElem.path = '/foo/bar';
         expect(window.location.pathname).to.be.equal('/foo/bar');
