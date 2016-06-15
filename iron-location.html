@@ -221,6 +221,12 @@ milliseconds.
      * @param {MouseEvent} event .
      */
     _globalOnClick: function(event) {
+      // If another event handler has stopped this event then there's nothing
+      // for us to do. This can happen e.g. when there are multiple
+      // iron-location elements in a page.
+      if (event.defaultPrevented) {
+        return;
+      }
       var href = this._getSameOriginLinkHref(event);
       if (!href) {
         return;
@@ -259,18 +265,18 @@ milliseconds.
 
       // If there's no link there's nothing to do.
       if (!anchor) {
-        return;
+        return null;
       }
 
       // Target blank is a new tab, don't intercept.
       if (anchor.target === '_blank') {
-        return;
+        return null;
       }
       // If the link is for an existing parent frame, don't intercept.
       if ((anchor.target === '_top' ||
            anchor.target === '_parent') &&
           window.top !== window) {
-        return;
+        return null;
       }
 
       var href = anchor.href;
@@ -310,6 +316,11 @@ milliseconds.
       // Need to use a full URL in case the containing page has a base URI.
       var fullNormalizedHref = new URL(
           normalizedHref, window.location.href).href;
+      // If the navigation is to the current page we shouldn't add a history
+      // entry.
+      if (fullNormalizedHref === window.location.href) {
+        return null;
+      }
       return fullNormalizedHref;
     },
     _makeRegExp: function(urlSpaceRegex) {
