@@ -274,18 +274,18 @@ milliseconds.
 
       // If there's no link there's nothing to do.
       if (!anchor) {
-        return;
+        return null;
       }
 
       // Target blank is a new tab, don't intercept.
       if (anchor.target === '_blank') {
-        return;
+        return null;
       }
       // If the link is for an existing parent frame, don't intercept.
       if ((anchor.target === '_top' ||
            anchor.target === '_parent') &&
           window.top !== window) {
-        return;
+        return null;
       }
 
       var href = anchor.href;
