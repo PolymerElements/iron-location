@@ -141,6 +141,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '?greeting=hello&target=world&another=key');
       });
     });
+    suite('does not spam the user\'s history', function() {
+      var replaceStateCalls, pushStateCalls;
+      var nativeReplaceState, nativePushState;
+      setup(function() {
+        replaceStateCalls = pushStateCalls = 0;
+        nativeReplaceState = window.history.replaceState;
+        nativePushState = window.history.pushState;
+        window.history.replaceState = function() {
+          replaceStateCalls++;
+        };
+        window.history.pushState = function() {
+          pushStateCalls++;
+        };
+      });
+      teardown(function() {
+        window.history.replaceState = nativeReplaceState;
+        window.history.pushState = nativePushState;
+      });
+      test('when a change happens immediately after ' +
+           'the iron-location is attached', function() {
+        var ironLocation = fixture('Solo');
+        expect(pushStateCalls).to.be.equal(0);
+        expect(replaceStateCalls).to.be.equal(0);
+        ironLocation.path = '/foo';
+        expect(replaceStateCalls).to.be.equal(1);
+        expect(pushStateCalls).to.be.equal(0);
+      });
+    });
     suite('when used with other iron-location elements', function() {
       var otherUrlElem;
       var urlElem;
