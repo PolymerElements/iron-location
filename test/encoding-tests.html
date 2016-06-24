@@ -1,0 +1,178 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+<head>
+  <title>iron-location URL encoding tests</title>
+
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../iron-location.html">
+</head>
+<body>
+
+<script>
+  'use strict';
+
+  class Location {
+    constructor() {
+      this._readUrl()
+      window.addEventListener('location-changed', () => {
+        this._readUrl();
+      });
+    }
+    set path(newPath) {
+      if (newPath == this._path) {
+        return;
+      }
+      this._path = newPath;
+      this._updateUrl();
+    }
+    get path() {
+      return this._path;
+    }
+    set hash(newHash) {
+      if (newHash == this._hash) {
+        return;
+      }
+      console.log(`before: ${this._hash} --- after: ${newHash}`);
+      this._hash = newHash;
+      this._updateUrl();
+    }
+    get hash() {
+      return this._hash;
+    }
+    set query(newQuery) {
+      if (newQuery == this._query) {
+        return;
+      }
+      this._query = newQuery;
+      this._updateUrl();
+    }
+    get query() {
+      return this._query;
+    }
+    _readUrl() {
+      var path = window.decodeURIComponent(window.location.pathname);
+      var hash = window.decodeURIComponent(
+          window.location.hash).substring(1);
+      var query = window.decodeURIComponent(
+          window.location.search).substring(1);
+
+      if (this.path == path && this.query == query && this.hash == hash) {
+        return;
+      }
+      this._path = path;
+      this._hash = hash;
+      this._query = query;
+    }
+    _updateUrl() {
+      const partiallyEncodedPath = this.path.replace(/\#/g, '%23').replace(/\?/g, '%3F');
+      let partiallyEncodedHash = '';
+      if (this.hash) {
+        partiallyEncodedHash = '#' + this.hash;
+      }
+      let partiallyEncodedQuery = '';
+      if (this.query) {
+        partiallyEncodedQuery = '?' + this.query.replace(/\#/g, '%23');
+      }
+      const url =
+          partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash;
+      console.log('updating url to: ' + url);
+      window.history.replaceState({}, null, url);
+      window.dispatchEvent(new CustomEvent('location-changed'));
+    }
+  }
+
+  function assertPathsCorrect(location, path) {
+    expect(location.path).to.be.eq(path);
+    expect(location.path).to.be.eq(window.location.pathname);
+  }
+  suite('encoding tests', function() {
+    var original;
+    setup(() => {
+      console.log('setup');
+      original = window.location.href;
+      window.history.replaceState({}, null, '/');
+    });
+    teardown(() => {
+      window.history.replaceState({}, null, original);
+    });
+    const pathEncodingExamples = {
+      '/foo': '/foo',
+      '/': '/',
+      '/foo bar': '/foo%20bar',
+      '/foo#bar': '/foo%23bar',
+      '/foo?xyz': '/foo%3Fxyz',
+      '/foo\'bar\'baz': '/foo\'bar\'baz',
+    };
+    const hashEncodingExamples = {
+      'foo': '#foo',
+      '': '',
+      'foo bar': '#foo bar',
+      'foo#bar': '#foo#bar',
+      'foo?bar': '#foo?bar',
+      '/foo\'bar\'baz': '#/foo\'bar\'baz',
+    };
+    const queryEncodingExamples = {
+      'foo': '?foo',
+      '': '',
+      'foo bar': '?foo%20bar',
+      'foo#bar': '?foo%23bar',
+      'foo?bar': '?foo?bar',
+      '/foo\'bar\'baz': '?/foo%27bar%27baz',
+    };
+
+    test('does paths', function() {
+      const location = new Location();
+      expect(location.path).to.be.eq('/');
+
+      for (const path in pathEncodingExamples) {
+        const encodedPath = pathEncodingExamples[path];
+
+        location.path = path;
+        expect(location.path).to.be.eq(path);
+        expect(window.location.pathname).to.be.eq(encodedPath);
+        expect((new Location()).path).to.be.eq(path);
+      }
+    });
+
+    test('does hashes', function() {
+      const location = new Location();
+      expect(location.hash).to.be.eq('');
+
+      for (const hash in hashEncodingExamples) {
+        const encodedHash = hashEncodingExamples[hash];
+
+        location.hash = hash;
+        expect(location.hash).to.be.eq(hash);
+        expect(window.location.hash).to.be.eq(encodedHash);
+        expect((new Location()).hash).to.be.eq(hash);
+      }
+    });
+
+    test('does queries', function() {
+      const location = new Location();
+      expect(location.query).to.be.eq('');
+
+      for (const query in queryEncodingExamples) {
+        const encodedQuery = queryEncodingExamples[query];
+
+        location.query = query;
+        expect(location.query).to.be.eq(query);
+        expect(window.location.search).to.be.eq(encodedQuery);
+        expect((new Location()).query).to.be.eq(query);
+      }
+    });
+  });
+</script>
+</body>
