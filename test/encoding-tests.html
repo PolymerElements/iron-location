@@ -23,23 +23,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <script>
   'use strict';
 
-  class Location {
-    constructor() {
-      this._readUrl()
-      window.addEventListener('location-changed', () => {
-        this._readUrl();
-      });
-    }
+  function Location() {
+    this._readUrl()
+    window.addEventListener('location-changed', function() {
+      this._readUrl();
+    }.bind(this));
+  };
+  Location.prototype = {
     set path(newPath) {
       if (newPath == this._path) {
         return;
       }
       this._path = newPath;
       this._updateUrl();
-    }
+    },
     get path() {
       return this._path;
-    }
+    },
     set hash(newHash) {
       if (newHash == this._hash) {
         return;
@@ -47,20 +47,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       console.log(`before: ${this._hash} --- after: ${newHash}`);
       this._hash = newHash;
       this._updateUrl();
-    }
+    },
     get hash() {
       return this._hash;
-    }
+    },
     set query(newQuery) {
       if (newQuery == this._query) {
         return;
       }
       this._query = newQuery;
       this._updateUrl();
-    }
+    },
     get query() {
       return this._query;
-    }
+    },
     _readUrl() {
       var path = window.decodeURIComponent(window.location.pathname);
       var hash = window.decodeURIComponent(
@@ -74,18 +74,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this._path = path;
       this._hash = hash;
       this._query = query;
-    }
+    },
     _updateUrl() {
-      const partiallyEncodedPath = this.path.replace(/\#/g, '%23').replace(/\?/g, '%3F');
-      let partiallyEncodedHash = '';
+      var partiallyEncodedPath = this.path.replace(/\#/g, '%23').replace(/\?/g, '%3F');
+      var partiallyEncodedHash = '';
       if (this.hash) {
         partiallyEncodedHash = '#' + this.hash;
       }
-      let partiallyEncodedQuery = '';
+      var partiallyEncodedQuery = '';
       if (this.query) {
         partiallyEncodedQuery = '?' + this.query.replace(/\#/g, '%23');
       }
-      const url =
+      var url =
           partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash;
       console.log('updating url to: ' + url);
       window.history.replaceState({}, null, url);
@@ -99,15 +99,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   }
   suite('encoding tests', function() {
     var original;
-    setup(() => {
+    setup(function() {
       console.log('setup');
       original = window.location.href;
       window.history.replaceState({}, null, '/');
     });
-    teardown(() => {
+    teardown(function() {
       window.history.replaceState({}, null, original);
     });
-    const pathEncodingExamples = {
+    var pathEncodingExamples = {
       '/foo': '/foo',
       '/': '/',
       '/foo bar': '/foo%20bar',
@@ -115,61 +115,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       '/foo?xyz': '/foo%3Fxyz',
       '/foo\'bar\'baz': '/foo\'bar\'baz',
     };
-    const hashEncodingExamples = {
+    var hashEncodingExamples = {
       'foo': '#foo',
       '': '',
-      'foo bar': '#foo bar',
+      'foo bar': ['#foo%20bar', '#foo bar'],
       'foo#bar': '#foo#bar',
       'foo?bar': '#foo?bar',
-      '/foo\'bar\'baz': '#/foo\'bar\'baz',
+      '/foo\'bar\'baz': ['#/foo%27bar%27baz', '#/foo\'bar\'baz'],
     };
-    const queryEncodingExamples = {
+    var queryEncodingExamples = {
       'foo': '?foo',
       '': '',
       'foo bar': '?foo%20bar',
       'foo#bar': '?foo%23bar',
       'foo?bar': '?foo?bar',
-      '/foo\'bar\'baz': '?/foo%27bar%27baz',
+      '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
     };
 
     test('does paths', function() {
-      const location = new Location();
+      var location = new Location();
       expect(location.path).to.be.eq('/');
 
-      for (const path in pathEncodingExamples) {
-        const encodedPath = pathEncodingExamples[path];
+      for (var path in pathEncodingExamples) {
+        var encodedPath = pathEncodingExamples[path];
 
         location.path = path;
         expect(location.path).to.be.eq(path);
-        expect(window.location.pathname).to.be.eq(encodedPath);
+        expect(window.location.pathname).to.eq(encodedPath);
         expect((new Location()).path).to.be.eq(path);
       }
     });
 
     test('does hashes', function() {
-      const location = new Location();
+      var location = new Location();
       expect(location.hash).to.be.eq('');
 
-      for (const hash in hashEncodingExamples) {
-        const encodedHash = hashEncodingExamples[hash];
+      for (var hash in hashEncodingExamples) {
+        var encodedHashes = hashEncodingExamples[hash];
+        if (typeof encodedHashes === 'string') {
+          encodedHashes = [encodedHashes];
+        }
 
         location.hash = hash;
         expect(location.hash).to.be.eq(hash);
-        expect(window.location.hash).to.be.eq(encodedHash);
+        expect(encodedHashes).to.include(window.location.hash);
         expect((new Location()).hash).to.be.eq(hash);
       }
     });
 
     test('does queries', function() {
-      const location = new Location();
+      var location = new Location();
       expect(location.query).to.be.eq('');
 
-      for (const query in queryEncodingExamples) {
-        const encodedQuery = queryEncodingExamples[query];
+      for (var query in queryEncodingExamples) {
+        var encodedQueries = queryEncodingExamples[query];
+        if (typeof encodedQueries === 'string') {
+          encodedQueries = [encodedQueries];
+        }
 
         location.query = query;
         expect(location.query).to.be.eq(query);
-        expect(window.location.search).to.be.eq(encodedQuery);
+        expect(encodedQueries).to.contain(window.location.search);
         expect((new Location()).query).to.be.eq(query);
       }
     });
