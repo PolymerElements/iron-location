@@ -79,6 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('when used solo', function() {
       var urlElem;
       setup(function() {
+        replaceState('/');
         urlElem = fixture('Solo');
       });
       test('basic functionality with #hash urls', function() {
@@ -116,32 +117,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.dispatchEvent(new CustomEvent('location-changed'));
         expect(urlElem.path).to.be.equal('/baz');
       });
-      var unusualPathNames = {
-        '/foo#bar': '/foo%23bar',
-        '/foo?xyz': '/foo%3Fxyz',
-        '/foo bar': '/foo%20bar',
-      };
-      // test('setting .path to a string with unusual characters', function() {
-      //   for (var plainTextPath in unusualPathNames) {
-      //     var encodedPath = unusualPathNames[plainTextPath];
-      //
-      //     debugger;
-      //     urlElem.path = plainTextPath;
-      //     expect(window.location.pathname).to.be.equal(encodedPath);
-      //     expect(urlElem.path).to.be.equal(plainTextPath);
-      //   }
-      // });
-      // test('receiving an unusual pathname from window.location', function() {
-      //   for (var plainTextPath in unusualPathNames) {
-      //     var encodedPath = unusualPathNames[plainTextPath];
-      //
-      //     debugger;
-      //     replaceState(encodedPath);
-      //     window.dispatchEvent(new CustomEvent('location-changed'));
-      //     expect(window.location.pathname).to.be.equal(encodedPath);
-      //     expect(urlElem.path).to.be.equal(plainTextPath);
-      //   }
-      // });
+      test('dealing with paths with unusual characters', function() {
+        var pathEncodingExamples = {
+          '/foo': '/foo',
+          '/': '/',
+          '/foo bar': '/foo%20bar',
+          '/foo#bar': '/foo%23bar',
+          '/foo?xyz': '/foo%3Fxyz',
+          '/foo\'bar\'baz': '/foo\'bar\'baz',
+        };
+
+        for (var plainTextPath in pathEncodingExamples) {
+          var encodedPath = pathEncodingExamples[plainTextPath];
+
+          urlElem.path = plainTextPath;
+          expect(window.location.pathname).to.be.equal(encodedPath);
+          expect(urlElem.path).to.be.equal(plainTextPath);
+          // expect(fixture('Solo').path).to.be.equal(plainTextPath);
+        }
+      });
+      test('dealing with hashes with unusual characters', function() {
+        var hashEncodingExamples = {
+          'foo': '#foo',
+          '': '',
+          'foo bar': '#foo bar',
+          'foo#bar': '#foo#bar',
+          'foo?bar': '#foo?bar',
+          '/foo\'bar\'baz': '#/foo\'bar\'baz',
+        };
+        for (var plainTextHash in hashEncodingExamples) {
+          var encodedHash = hashEncodingExamples[plainTextHash];
+
+          urlElem.hash = plainTextHash;
+          expect(window.location.hash).to.be.equal(encodedHash);
+          expect(urlElem.hash).to.be.equal(plainTextHash);
+          // expect(fixture('Solo').hash).to.be.equal(plainTextHash);
+        }
+      });
+      test('dealing with queries with unusual characters', function() {
+        var queryEncodingExamples = {
+          'foo': '?foo',
+          '': '',
+          'foo bar': '?foo%20bar',
+          'foo#bar': '?foo%23bar',
+          'foo?bar': '?foo?bar',
+          '/foo\'bar\'baz': '?/foo%27bar%27baz',
+        };
+        for (var plainTextQuery in queryEncodingExamples) {
+          var encodedQuery = queryEncodingExamples[plainTextQuery];
+
+          expect(urlElem._initialized).to.be.eq(true);
+          urlElem.query = plainTextQuery;
+          expect(window.location.search).to.be.equal(encodedQuery);
+          expect(urlElem.query).to.be.equal(plainTextQuery);
+          // expect(fixture('Solo').query).to.be.equal(plainTextQuery);
+        }
+      });
       test('assigning to a relative path URL', function() {
         urlElem.path = '/foo/bar';
         expect(window.location.pathname).to.be.equal('/foo/bar');

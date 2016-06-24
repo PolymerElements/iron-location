@@ -169,7 +169,7 @@ milliseconds.
       return new Date().getTime();
     },
     _hashChanged: function() {
-      this.hash = window.location.hash.substring(1);
+      this.hash = window.decodeURIComponent(window.location.hash.substring(1));
     },
     _urlChanged: function() {
       // We want to extract all info out of the updated URL before we
@@ -179,27 +179,30 @@ milliseconds.
       // one when we set this.hash. Likewise for query.
       this._dontUpdateUrl = true;
       this._hashChanged();
-      this.path = window.location.pathname;
-      this.query = window.location.search.substring(1);
+      this.path = window.decodeURIComponent(window.location.pathname);
+      this.query = window.decodeURIComponent(
+          window.location.search.substring(1));
       this._dontUpdateUrl = false;
       this._updateUrl();
     },
     _getUrl: function() {
-      var url = this.path.replace(/#/g, '%23').replace(/\?/g, '%3F');
-      var query = this.query.replace(/#/g, '%23');
-      if (query) {
-        url += '?' + query;
+      var partiallyEncodedPath = this.path.replace(/\#/g, '%23').replace(/\?/g, '%3F');
+      var partiallyEncodedQuery = '';
+      if (this.query) {
+        partiallyEncodedQuery = '?' + this.query.replace(/\#/g, '%23');
       }
+      var partiallyEncodedHash = '';
       if (this.hash) {
-        url += '#' + this.hash;
+        partiallyEncodedHash = '#' + this.hash;
       }
-      return url;
+      console.log(partiallyEncodedPath, partiallyEncodedHash, partiallyEncodedQuery);
+      return (
+          partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
     },
     _updateUrl: function() {
       if (this._dontUpdateUrl || !this._initialized) {
         return;
       }
-      debugger;
       var newUrl = this._getUrl();
       var currentUrl = (
           window.location.pathname +
