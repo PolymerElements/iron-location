@@ -78,9 +78,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   function ironLocationTests() {
     suite('when used solo', function() {
       var urlElem;
+      var toRemove;
       setup(function() {
         replaceState('/');
         urlElem = fixture('Solo');
+        toRemove = [];
+      });
+      teardown(function() {
+        for (var i = 0; i < toRemove.length; i++) {
+          document.body.removeChild(toRemove[i]);
+        }
       });
       test('basic functionality with #hash urls', function() {
         // Initialized to the window location's hash.
@@ -117,6 +124,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.dispatchEvent(new CustomEvent('location-changed'));
         expect(urlElem.path).to.be.equal('/baz');
       });
+      function makeTemporaryIronLocation() {
+        var ironLocation = document.createElement('iron-location');
+        document.body.appendChild(ironLocation);
+        toRemove.push(ironLocation);
+        return ironLocation
+      }
       test('dealing with paths with unusual characters', function() {
         var pathEncodingExamples = {
           '/foo': '/foo',
@@ -133,25 +146,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           urlElem.path = plainTextPath;
           expect(window.location.pathname).to.be.equal(encodedPath);
           expect(urlElem.path).to.be.equal(plainTextPath);
-          // expect(fixture('Solo').path).to.be.equal(plainTextPath);
+          var temporaryIronLocation = makeTemporaryIronLocation();
+          expect(temporaryIronLocation.path).to.be.equal(plainTextPath);
         }
       });
       test('dealing with hashes with unusual characters', function() {
         var hashEncodingExamples = {
           'foo': '#foo',
           '': '',
-          'foo bar': '#foo bar',
+          'foo bar': ['#foo%20bar', '#foo bar'],
           'foo#bar': '#foo#bar',
           'foo?bar': '#foo?bar',
-          '/foo\'bar\'baz': '#/foo\'bar\'baz',
+          '/foo\'bar\'baz': ['#/foo%27bar%27baz', '#/foo\'bar\'baz'],
         };
         for (var plainTextHash in hashEncodingExamples) {
-          var encodedHash = hashEncodingExamples[plainTextHash];
+          var encodedHashes = hashEncodingExamples[plainTextHash];
+          if (typeof encodedHashes === 'string') {
+            encodedHashes = [encodedHashes];
+          }
 
           urlElem.hash = plainTextHash;
-          expect(window.location.hash).to.be.equal(encodedHash);
+          expect(encodedHashes).to.contain(window.location.hash);
           expect(urlElem.hash).to.be.equal(plainTextHash);
-          // expect(fixture('Solo').hash).to.be.equal(plainTextHash);
+          expect(makeTemporaryIronLocation().hash).to.be.equal(plainTextHash);
         }
       });
       test('dealing with queries with unusual characters', function() {
@@ -161,16 +178,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           'foo bar': '?foo%20bar',
           'foo#bar': '?foo%23bar',
           'foo?bar': '?foo?bar',
-          '/foo\'bar\'baz': '?/foo%27bar%27baz',
+          '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
         };
         for (var plainTextQuery in queryEncodingExamples) {
-          var encodedQuery = queryEncodingExamples[plainTextQuery];
+          var encodedQueries = queryEncodingExamples[plainTextQuery];
+          if (typeof encodedQueries === 'string') {
+            encodedQueries = [encodedQueries];
+          }
 
           expect(urlElem._initialized).to.be.eq(true);
           urlElem.query = plainTextQuery;
-          expect(window.location.search).to.be.equal(encodedQuery);
+          expect(encodedQueries).to.contain(window.location.search);
           expect(urlElem.query).to.be.equal(plainTextQuery);
-          // expect(fixture('Solo').query).to.be.equal(plainTextQuery);
+          expect(makeTemporaryIronLocation().query).to.be.equal(plainTextQuery);
         }
       });
       test('assigning to a relative path URL', function() {
