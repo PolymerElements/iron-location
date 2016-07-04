@@ -63,10 +63,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             object: {'debug': '', 'ok': ''}
           },
           {
-            string: 'plus=turns+into+spaces',
-            object: {'plus': 'turns into spaces'}
-          },
-          {
             string: 'monster%20kid%3A=%F0%9F%98%BF',
             object: {'monster kid:': '😿'}
           },
@@ -93,6 +89,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           paramsElem.paramsObject = mapping.object;
           expect(paramsElem.paramsString).to.be.equal(mapping.string);
         });
+      });
+      test('query strings with alternative encodings', function() {
+        // Check the mapping for querystrings with + instead of %20.
+        paramsElem.paramsString = 'key=value+with+spaces';
+        expect(paramsElem.paramsObject).to.deep.equal(
+            {key: 'value with spaces'});
       });
     });
 
