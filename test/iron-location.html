@@ -240,34 +240,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '?greeting=hello&target=world&another=key');
       });
     });
-    suite('when used with other iron-location elements', function() {
-      var otherUrlElem;
-      var urlElem;
+    suite('does not spam the user\'s history', function() {
+      var replaceStateCalls, pushStateCalls;
+      var nativeReplaceState, nativePushState;
       setup(function() {
-        var elems = fixture('Together');
-        urlElem = elems.querySelector('#one');
-        otherUrlElem = elems.querySelector('#two');
+        replaceStateCalls = pushStateCalls = 0;
+        nativeReplaceState = window.history.replaceState;
+        nativePushState = window.history.pushState;
+        window.history.replaceState = function() {
+          replaceStateCalls++;
+        };
+        window.history.pushState = function() {
+          pushStateCalls++;
+        };
       });
-      function assertHaveSameUrls(urlElemOne, urlElemTwo) {
-        expect(urlElemOne.path).to.be.equal(urlElemTwo.path);
-        expect(urlElemOne.hash).to.be.equal(urlElemTwo.hash);
-        expect(urlElemOne.query).to.be.equal(urlElemTwo.query);
-      }
-      test('coordinate their changes (by firing events on window)', function() {
-        assertHaveSameUrls(urlElem, otherUrlElem);
-
-        urlElem.path = '/a/b/c';
-        assertHaveSameUrls(urlElem, otherUrlElem);
-
-        otherUrlElem.query = 'alsdkjflaksjfd=alksjfdlkajsdfl';
-        assertHaveSameUrls(urlElem, otherUrlElem);
-
-        urlElem.hash = 'lkjljifosjkldfjlksjfldsjf';
-        assertHaveSameUrls(urlElem, otherUrlElem);
+      teardown(function() {
+        window.history.replaceState = nativeReplaceState;
+        window.history.pushState = nativePushState;
       });
+      test('when a change happens immediately after ' +
+           'the iron-location is attached', function() {
+        var ironLocation = fixture('Solo');
+        expect(pushStateCalls).to.be.equal(0);
+        expect(replaceStateCalls).to.be.equal(0);
+        ironLocation.path = '/foo';
+        expect(replaceStateCalls).to.be.equal(1);
+        expect(pushStateCalls).to.be.equal(0);
     });
-    suite('when intercepting links', function() {
 
+      suite('when intercepting links', function() {
       /**
        * Clicks the given link while an iron-location element with the given
        * urlSpaceRegex is in the same document. Returns whether the
@@ -306,6 +307,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         expect(isClickCaptured(anchor)).to.be.eq(true);
+          expect(pushStateCalls).to.be.equal(1);
       });
 
       test('link that matches url space is intercepted', function() {
@@ -313,6 +315,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         anchor.href = makeAbsoluteUrl('/foo');
 
         expect(isClickCaptured(anchor, '/fo+')).to.be.eq(true);
+          expect(pushStateCalls).to.be.equal(1);
       });
 
       test('link that doesn\'t match url space isn\'t intercepted', function() {
@@ -320,6 +323,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         anchor.href = makeAbsoluteUrl('/bar');
 
         expect(isClickCaptured(anchor, '/fo+')).to.be.eq(false);
+          expect(pushStateCalls).to.be.equal(0);
       });
 
       test('link to another domain isn\'t intercepted', function() {
@@ -327,6 +331,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         anchor.href = 'http://example.com/';
 
         expect(isClickCaptured(anchor)).to.be.eq(false);
+          expect(pushStateCalls).to.be.equal(0);
       });
 
       test('a link with target=_blank isn\'t intercepted', function() {
@@ -335,7 +340,66 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         anchor.target = '_blank';
 
         expect(isClickCaptured(anchor)).to.be.eq(false);
+          expect(pushStateCalls).to.be.equal(0);
+        });
+
+        test('a link with an href to the ' +
+             'current page shouldn\'t add to history.', function() {
+          var anchor = document.createElement('a');
+          anchor.href = window.location.href;
+
+          // The click is captured, but it doesn't add to history.
+          expect(isClickCaptured(anchor)).to.be.equal(true);
+          expect(pushStateCalls).to.be.equal(0);
+        });
+
+        test('a click that has already been defaultPrevented ' +
+             'shouldn\'t result in a navigation', function() {
+           fixture('Solo');
+           var anchor = document.createElement('a');
+           anchor.href = makeAbsoluteUrl('/');
+           anchor.addEventListener('click', function(event) {
+             event.preventDefault();
+           });
+           document.body.appendChild(anchor);
+
+           var originalPushState = window.history.pushState;
+           var count = 0;
+           window.history.pushState = function() {
+             count++;
+           }
+           anchor.click();
+           window.history.pushState = originalPushState;
+
+           expect(count).to.be.equal(0);
       })
+    });
+    });
+    suite('when used with other iron-location elements', function() {
+      var otherUrlElem;
+      var urlElem;
+      setup(function() {
+        var elems = fixture('Together');
+        urlElem = elems.querySelector('#one');
+        otherUrlElem = elems.querySelector('#two');
+      });
+      function assertHaveSameUrls(urlElemOne, urlElemTwo) {
+        expect(urlElemOne.path).to.be.equal(urlElemTwo.path);
+        expect(urlElemOne.hash).to.be.equal(urlElemTwo.hash);
+        expect(urlElemOne.query).to.be.equal(urlElemTwo.query);
+      }
+      test('coordinate their changes (by firing events on window)', function() {
+        assertHaveSameUrls(urlElem, otherUrlElem);
+
+        urlElem.path = '/a/b/c';
+        assertHaveSameUrls(urlElem, otherUrlElem);
+
+        otherUrlElem.query = 'alsdkjflaksjfd=alksjfdlkajsdfl';
+        assertHaveSameUrls(urlElem, otherUrlElem);
+
+        urlElem.hash = 'lkjljifosjkldfjlksjfldsjf';
+        assertHaveSameUrls(urlElem, otherUrlElem);
+      });
     });
 
     suite('supports doing synchronous redirection', function() {
