@@ -19,8 +19,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
   <link rel="import" href="../iron-location.html">
   <link rel="import" href="./redirection.html">
+  <style>
+    #safari-cooldown {
+      font-size: 18px;
+      max-width: 300px;
+    }
+    #safari-cooldown div {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
+
+  <div id='safari-cooldown' hidden>
+    <div>Danger: URL overheating.</div>
+    <div>
+      Safari requires a cooldown period before we call
+      pushState/replaceState any more.
+    </div>
+    <div>Testing will resume after 30 seconds.</div>
+    <div>
+      <a href="https://forums.developer.apple.com/thread/36650">More info</a>
+    </div>
+  </div>
+
 <test-fixture id='Solo'>
   <template>
     <iron-location></iron-location>
@@ -358,7 +380,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       window.history.replaceState({}, '', initialUrl);
     });
 
-    ironLocationTests();
+    // This is as dumb as it looks. See #safari-cooldown in the dom above.
+    var cooldownFunction = function() {};
+    if (/^Apple/.test(navigator.vendor)) {
+      cooldownFunction = function(done) {
+        var cooldownPeriod = 30 * 1000;
+        this.timeout(cooldownPeriod + 5000);
+        var cooldownMessage = document.querySelector('#safari-cooldown');
+        cooldownMessage.removeAttribute('hidden');
+        setTimeout(function() {
+          done();
+          cooldownMessage.setAttribute('hidden', 'hidden');
+        }, cooldownPeriod);
+      };
+    }
+
+    suite('without a base URI', function() {
+      ironLocationTests();
+
+      suiteTeardown(cooldownFunction);
+    });
 
     suite('with a base URI', function() {
       var baseElem;
@@ -373,7 +414,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       teardown(function() {
         document.head.removeChild(baseElem);
       });
-
+      suiteTeardown(cooldownFunction);
       ironLocationTests();
     });
   });
