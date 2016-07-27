@@ -63,7 +63,7 @@ milliseconds.
           type: String,
           notify: true,
           value: function() {
-            return window.location.pathname;
+            return window.decodeURIComponent(window.location.pathname);
           }
         },
         /**
@@ -73,7 +73,7 @@ milliseconds.
           type: String,
           notify: true,
           value: function() {
-            return window.location.search.slice(1);
+            return window.decodeURIComponent(window.location.search.slice(1));
           }
         },
         /**
@@ -83,7 +83,7 @@ milliseconds.
           type: String,
           notify: true,
           value: function() {
-            return window.location.hash.slice(1);
+            return window.decodeURIComponent(window.location.hash.slice(1));
           }
         },
         /**
@@ -161,7 +161,7 @@ milliseconds.
         this._initialized = false;
       },
       _hashChanged: function() {
-        this.hash = window.location.hash.substring(1);
+        this.hash = window.decodeURIComponent(window.location.hash.substring(1));
       },
       _urlChanged: function() {
         // We want to extract all info out of the updated URL before we
@@ -171,36 +171,40 @@ milliseconds.
         // one when we set this.hash. Likewise for query.
         this._dontUpdateUrl = true;
         this._hashChanged();
-        this.path = window.location.pathname;
-        this.query = window.location.search.substring(1);
+        this.path = window.decodeURIComponent(window.location.pathname);
+        this.query = window.decodeURIComponent(
+            window.location.search.substring(1));
         this._dontUpdateUrl = false;
         this._updateUrl();
       },
       _getUrl: function() {
-        var url = this.path;
-        var query = this.query;
-        if (query) {
-          url += '?' + query;
+        var partiallyEncodedPath = window.encodeURI(
+            this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
+        var partiallyEncodedQuery = '';
+        if (this.query) {
+          partiallyEncodedQuery = '?' + window.encodeURI(
+              this.query).replace(/\#/g, '%23');
         }
+        var partiallyEncodedHash = '';
         if (this.hash) {
-          url += '#' + this.hash;
+          partiallyEncodedHash = '#' + window.encodeURI(this.hash);
         }
-        return url;
+        return (
+            partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
       },
       _updateUrl: function() {
         if (this._dontUpdateUrl || !this._initialized) {
           return;
         }
-        var newUrl = this._getUrl();
-        var currentUrl = (
-            window.location.pathname +
-            window.location.search +
-            window.location.hash
-        );
-        if (newUrl == currentUrl) {
-          // nothing to do, the URL didn't change
+        if (this.path === window.decodeURIComponent(window.location.pathname) &&
+            this.query === window.decodeURIComponent(
+                window.location.search.substring(1)) &&
+            this.hash === window.decodeURIComponent(
+                window.location.hash.substring(1))) {
+          // Nothing to do, the current URL is a representation of our properties.
           return;
         }
+        var newUrl = this._getUrl();
         // Need to use a full URL in case the containing page has a base URI.
         var fullNewUrl = new URL(
             newUrl, window.location.protocol + '//' + window.location.host).href;
