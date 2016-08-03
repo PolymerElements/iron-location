@@ -295,7 +295,8 @@ milliseconds.
           return null;
         }
 
-        var eventPath = event.path;
+        var eventPath = (typeof event.deepPath === 'function') ?
+            event.deepPath() : event.path;
         var anchor = null;
 
         for (var i = 0; i < eventPath.length; i++) {
