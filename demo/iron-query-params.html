@@ -15,16 +15,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../iron-query-params.html">
-  <link rel="import" href="../../paper-styles/classes/typography.html">
-  <link rel="import" href="../../iron-flex-layout/classes/iron-flex-layout.html">
-  <link rel="import" href="../../paper-input/paper-input.html">
-  <link rel="stylesheet" href="../../paper-styles/demo.css">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
 </head>
 <body>
 
   <dom-module id='iron-query-params-demo'>
     <template>
-      <style>
+      <style include="iron-flex">
         div.inputs {
           margin-bottom: 15px;
         }
@@ -34,41 +31,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         span.seconds {
         }
-        [layout] {
-          @apply(--layout);
-        }
-        [layout][horizontal] {
-          @apply(--layout-horizontal);
-        }
-        [layout][horizontal] > div {
-          padding: 20px;
-          max-width: 500px;
-        }
-        [layout][vertical] {
-          @apply(--layout-vertical);
-        }
-        [layout][flex] {
-          @apply(--layout-flex);
-        }
         h3 {
           padding: 0;
           margin: 0;
         }
       </style>
       <iron-query-params
-          params-string='{{paramString}}' params-object='{{params}}'>
+          id="iqp"
+          params-string='{{paramsString}}'
+          params-object='{{params}}'>
       </iron-query-params>
 
-      <div layout horizontal>
-        <div layout vertical flex class='inputs'>
-          <paper-input label='params as string'
-                       value='{{paramString}}' always-float-label>
-          </paper-input>
-          <paper-input label='params as object' value='{{paramsString}}'
-                       invalid='{{paramsInvalid}}'
-                       error-message='Should be legal JSON'
-                       always-float-label>
-          </paper-input>
+      <div class="layout horizontal">
+        <div class="layout vertical flex" class='inputs'>
+          <div>Params as string:</div>
+          <input value="{{paramsString::input}}">
+
+          <div>Params as object</div>
+          <template is="dom-if" if="{{paramsInvalid}}">
+            <div>INVALID PARAMS: Should be legal JSON</div>
+          </template>
+          <input value="{{paramsObjString::input}}">
         </div>
       </div>
     </template>
@@ -77,35 +60,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer({
           is: 'iron-query-params-demo',
           properties: {
-            paramsString: {
-              observer: 'paramsStringChanged'
+            paramsObjString: {
+              observer: 'paramsObjStringChanged'
             },
+
             params: {
               observer: 'paramsChanged'
             },
+
             paramsInvalid: {
               value: false,
             },
+
+            paramsString: {
+              type: String,
+              observer: 'pramsStringChanged'
+            }
           },
-          paramsStringChanged: function() {
+
+          pramsStringChanged: function() {
+            this.notifyPath('params', this.$.iqp.paramsObject);
+          },
+
+          paramsObjStringChanged: function() {
             if (this.ignore) {
               return;
             }
             this.ignore = true;
             try {
-              this.params = JSON.parse(this.paramsString);
+              this.params = JSON.parse(this.paramsObjString);
+              this.notifyPath('paramsString', this.$.iqp.paramsString);
               this.paramsInvalid = false;
             } catch(_) {
               this.paramsInvalid = true;
             }
             this.ignore = false;
           },
+
           paramsChanged: function() {
             if (this.ignore) {
               return;
             }
             this.ignore = true;
-            this.paramsString = JSON.stringify(this.params);
+            this.paramsObjString = JSON.stringify(this.params);
             this.paramsInvalid = false;
             this.ignore = false;
           }
