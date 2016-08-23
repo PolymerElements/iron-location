@@ -168,7 +168,7 @@ milliseconds.
         '_updateUrl(path, query, hash)'
       ],
 
-      initialize: function() {
+      ready: function() {
         this.listen(window, 'hashchange', '_hashChanged');
         this.listen(window, 'location-changed', '_urlChanged');
         this.listen(window, 'popstate', '_urlChanged');
@@ -209,10 +209,6 @@ milliseconds.
       },
 
       _updateUrl: function() {
-        if(!this._initialized) {
-          this.initialize()
-        }
-
         if (this._dontUpdateUrl || !this._initialized) {
           return;
         }
