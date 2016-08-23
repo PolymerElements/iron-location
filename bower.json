@@ -27,14 +27,15 @@
   },
   "devDependencies": {
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0",
-    "iron-flex-layout": "../iron-flex-layout",
+    "iron-flex-layout": "git@github.com:notwaldorf/iron-flex-layout",
     "test-fixture": "polymerelements/test-fixture#^1.0.0",
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#v1-polymer-edits",
-    "iron-demo-helpers": "../iron-demo-helpers"
+    "iron-demo-helpers": "git@github.com:notwaldorf/iron-demo-helpers"
   },
   "resolutions": {
     "polymer": "master",
-    "webcomponentsjs": "v1-polymer-edits"
+    "webcomponentsjs": "v1-polymer-edits",
+    "iron-flex-layout": "55931af891"
   }
 }
