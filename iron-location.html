@@ -140,26 +140,6 @@ milliseconds.
         }
       },
 
-      _getUrl: function() {
-        var partiallyEncodedPath = window.encodeURI(
-            this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
-        var partiallyEncodedQuery = '';
-
-        if (this.query) {
-          partiallyEncodedQuery = '?' + window.encodeURI(
-              this.query).replace(/\#/g, '%23');
-        }
-
-        var partiallyEncodedHash = '';
-
-        if (this.hash) {
-          partiallyEncodedHash = '#' + window.encodeURI(this.hash);
-        }
-
-        return (
-            partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
-      },
-
       hostAttributes: {
         hidden: true
       },
@@ -206,6 +186,26 @@ milliseconds.
             window.location.search.substring(1));
         this._dontUpdateUrl = false;
         this._updateUrl();
+      },
+
+      _getUrl: function() {
+        var partiallyEncodedPath = window.encodeURI(
+            this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
+        var partiallyEncodedQuery = '';
+
+        if (this.query) {
+          partiallyEncodedQuery = '?' + window.encodeURI(
+              this.query).replace(/\#/g, '%23');
+        }
+
+        var partiallyEncodedHash = '';
+
+        if (this.hash) {
+          partiallyEncodedHash = '#' + window.encodeURI(this.hash);
+        }
+
+        return (
+            partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
       },
 
       _updateUrl: function() {
