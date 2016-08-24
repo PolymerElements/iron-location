@@ -37,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       </style>
       <iron-query-params
-          id="iqp"
+          id="iQueryParams"
           params-string='{{paramsString}}'
           params-object='{{params}}'>
       </iron-query-params>
@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-if" if="{{paramsInvalid}}">
             <div>INVALID PARAMS: Should be legal JSON</div>
           </template>
-          <input value="{{paramsObjString::input}}">
+          <input value="{{paramsJson::input}}">
         </div>
       </div>
     </template>
@@ -60,8 +60,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer({
           is: 'iron-query-params-demo',
           properties: {
-            paramsObjString: {
-              observer: 'paramsObjStringChanged'
+            paramsJson: {
+              observer: 'paramsJsonChanged'
             },
 
             params: {
@@ -79,17 +79,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
 
           pramsStringChanged: function() {
-            this.notifyPath('params', this.$.iqp.paramsObject);
+            this.notifyPath('params', this.$.iQueryParams.paramsObject);
           },
 
-          paramsObjStringChanged: function() {
+          paramsJsonChanged: function() {
             if (this.ignore) {
               return;
             }
             this.ignore = true;
             try {
-              this.params = JSON.parse(this.paramsObjString);
-              this.notifyPath('paramsString', this.$.iqp.paramsString);
+              this.params = JSON.parse(this.paramsJson);
+              this.notifyPath('paramsString', this.$.iQueryParams.paramsString);
               this.paramsInvalid = false;
             } catch(_) {
               this.paramsInvalid = true;
@@ -102,7 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               return;
             }
             this.ignore = true;
-            this.paramsObjString = JSON.stringify(this.params);
+            this.paramsJson = JSON.stringify(this.params);
             this.paramsInvalid = false;
             this.ignore = false;
           }

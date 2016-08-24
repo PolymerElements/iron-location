@@ -140,7 +140,7 @@ milliseconds.
         }
       },
 
-      get _url() {
+      _getUrl: function() {
         var partiallyEncodedPath = window.encodeURI(
             this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
         var partiallyEncodedQuery = '';
@@ -235,10 +235,10 @@ milliseconds.
           return;
         }
 
-        var newUrl = this._url;
+        var newUrl = this._getUrl();
         // Need to use a full URL in case the containing page has a base URI.
         var fullNewUrl = new URL(
-          newUrl, window.location.protocol + '//' + window.location.host).href;
+            newUrl, window.location.protocol + '//' + window.location.host).href;
         var now = window.performance.now();
         var shouldReplace = this._lastChangedAt + this.dwellTime > now;
         this._lastChangedAt = now;
@@ -304,8 +304,7 @@ milliseconds.
           return null;
         }
 
-        var eventPath = (typeof event.composedPath === 'function') ?
-            event.composedPath() : event.path;
+        var eventPath = Polymer.dom(event).path;
         var anchor = null;
 
         for (var i = 0; i < eventPath.length; i++) {
