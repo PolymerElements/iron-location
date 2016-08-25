@@ -28,7 +28,7 @@
   "devDependencies": {
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0",
     "iron-flex-layout": "git@github.com:notwaldorf/iron-flex-layout",
-    "test-fixture": "polymerelements/test-fixture#^1.0.0",
+    "test-fixture": "polymerelements/test-fixture#custom-elements-v1",
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#v1-polymer-edits",
     "iron-demo-helpers": "git@github.com:notwaldorf/iron-demo-helpers"
