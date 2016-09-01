@@ -29,15 +29,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: inline-block;
           width: 100px;
         }
-        span.seconds {
-        }
         h3 {
           padding: 0;
           margin: 0;
         }
       </style>
       <iron-query-params
-          id="iQueryParams"
+          id="queryParams"
           params-string='{{paramsString}}'
           params-object='{{params}}'>
       </iron-query-params>
@@ -74,12 +72,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             paramsString: {
               type: String,
-              observer: 'pramsStringChanged'
+              observer: 'paramsStringChanged'
             }
           },
 
-          pramsStringChanged: function() {
-            this.notifyPath('params', this.$.iQueryParams.paramsObject);
+          paramsStringChanged: function() {
+            this.notifyPath('params', this.$.queryParams.paramsObject);
           },
 
           paramsJsonChanged: function() {
@@ -89,7 +87,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.ignore = true;
             try {
               this.params = JSON.parse(this.paramsJson);
-              this.notifyPath('paramsString', this.$.iQueryParams.paramsString);
+              this.notifyPath('paramsString', this.$.queryParams.paramsString);
               this.paramsInvalid = false;
             } catch(_) {
               this.paramsInvalid = true;
