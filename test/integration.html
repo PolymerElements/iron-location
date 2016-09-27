@@ -36,8 +36,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </iron-query-params>
     </template>
     <script>
-      Polymer({
-        is: 'integration-element'
+      HTMLImports.whenReady(function() {
+        Polymer({
+          is: 'integration-element'
+        });
       });
     </script>
   </dom-module>
