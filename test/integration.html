@@ -92,7 +92,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(ironLocationQuery).to.contain(ironLocation.query);
           expect(ironLocationQuery).to.contain(ironQueryParams.paramsString);
           if (plainTextQuery) {
-            console.log(ironQueryParams.paramsObject);
             expect('').to.be.equal(ironQueryParams.paramsObject[plainTextQuery])
           } else {
             expect(ironQueryParams.paramsObject[plainTextQuery]).to.be.undefined;          
