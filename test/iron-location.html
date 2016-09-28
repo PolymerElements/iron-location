@@ -205,7 +205,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
         for (var plainTextQuery in queryEncodingExamples) {
           var encodedQueries = queryEncodingExamples[plainTextQuery];
-          var ironLocationQuery = encodedQueries;
+          var ironLocationQuery = queryEncodingExamples[plainTextQuery];
           if (typeof encodedQueries === 'string') {
             encodedQueries = [encodedQueries];
             ironLocationQuery = [ironLocationQuery.substring(1)];
@@ -217,6 +217,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           expect(urlElem._initialized).to.be.eq(true);
           urlElem.query = plainTextQuery;
+          expect(encodedQueries).to.contain(window.location.search);
+          expect(ironLocationQuery).to.contain(urlElem.query);
+          expect(ironLocationQuery).to.contain(makeTemporaryIronLocation().query);
+
+          urlElem.query = 'dummyValue';
+          urlElem.query = ironLocationQuery[0];
+
           expect(encodedQueries).to.contain(window.location.search);
           expect(ironLocationQuery).to.contain(urlElem.query);
           expect(ironLocationQuery).to.contain(makeTemporaryIronLocation().query);
