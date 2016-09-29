@@ -205,15 +205,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
         for (var plainTextQuery in queryEncodingExamples) {
           var encodedQueries = queryEncodingExamples[plainTextQuery];
-          var ironLocationQuery = queryEncodingExamples[plainTextQuery];
           if (typeof encodedQueries === 'string') {
             encodedQueries = [encodedQueries];
-            ironLocationQuery = [ironLocationQuery.substring(1)];
-          } else {
-            ironLocationQuery = ironLocationQuery.map(function(value) {
-              return value.substring(1);
-            });
           }
+          
+          var ironLocationQuery = encodedQueries.map(function(value) {
+            return value.substring(1);
+          });
 
           expect(urlElem._initialized).to.be.eq(true);
           urlElem.query = plainTextQuery;
