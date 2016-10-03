@@ -31,10 +31,10 @@
     "test-fixture": "polymerelements/test-fixture#custom-elements-v1",
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#v1",
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0-preview"
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0-preview",
+    "iron-component-page": "PolymerElements/iron-component-page#2.0-preview"
   },
   "resolutions": {
-    "iron-flex-layout": "2.0-preview",
     "test-fixture": "custom-elements-v1",
     "webcomponentsjs": "v1",
     "polymer": "2.0-preview"
