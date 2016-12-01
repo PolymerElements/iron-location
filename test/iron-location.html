@@ -424,7 +424,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('of the query portion of the URL', function() {
-        expect(window.location.search).to.be.equal('');
         var redirector = fixture('RedirectQuery');
         expect(window.location.search).to.be.equal('?redirectedTo');
         expect(redirector.query).to.be.equal('redirectedTo');
