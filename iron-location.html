@@ -181,7 +181,11 @@ milliseconds.
             this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
         var partiallyEncodedQuery = '';
         if (this.query) {
-          partiallyEncodedQuery = '?' + this.query.replace(/\#/g, '%23');
+          // decoding here needed to prevent encoding the % sign. decodeURIComponent
+          // because it will not decode the hash otherwise. encodeURI and not
+          // component because it will encode ? to %3F otherwise.
+          partiallyEncodedQuery = '?' + encodeURI(decodeURIComponent(this.query))
+              .replace(/\#/g, '%23');
         }
         var partiallyEncodedHash = '';
         if (this.hash) {
