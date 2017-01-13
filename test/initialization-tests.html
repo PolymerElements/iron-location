@@ -133,7 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return getUrl(iframe).then(function(url) {
               expect(url.search).to.be.eq('');
               iframe.contentWindow.postMessage({type: 'appendBody', tagName: caseName}, '*');
-              return timePasses(60).then(function() {return getUrl(iframe)});
+              return timePasses(100).then(function() {return getUrl(iframe)});
             }).then(function(url) {
               expect(url.search).to.be.eq('?on-timeout');
             });
