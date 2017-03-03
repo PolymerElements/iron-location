@@ -13,8 +13,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <title>iron-location</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../url/url.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script>
+    // override edge's URL Implementation
+    try {
+      debugger;
+      var href = new URL('http://www.google.com/?foo bar').href;
+      if (href !== 'http://www.google.com/?foo%20bar') {
+        window.forceJURL = true;
+      }
+    } catch (e) {
+      window.forceJURL = true;
+    }
+  </script>
+  <script src="../../url/url.js"></script>
 
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
