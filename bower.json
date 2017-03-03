@@ -52,5 +52,9 @@
         "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.3"
       }
     }
+  },
+  "resolutions": {
+    "webcomponentsjs": "1.0.0-rc.1",
+    "polymer": "2.0-preview"
   }
 }
