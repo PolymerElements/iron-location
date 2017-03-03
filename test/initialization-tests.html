@@ -71,8 +71,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return message.type === 'urlQueryResponse';
         })
         var revoke = function() {};
-        var result = new Promise(function(resolve, reject) {
-          revoke = onMessage(iframe, resolve);
+        result.then(function() {
+          return new Promise(function(resolve, reject) {
+            revoke = onMessage(iframe, resolve);
+          });
         });
         result.then(revoke, revoke);
         iframe.contentWindow.postMessage({type: 'urlQuery'}, '*');
@@ -120,6 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         cases.forEach(function(caseName) {
           test('the url takes priority in ' + caseName + ' initialization', function() {
             return getUrl(iframe).then(function(url) {
+              debugger;
               expect(url.search).to.be.eq('');
               iframe.contentWindow.postMessage({type: 'appendBody', tagName: caseName}, '*');
               return timePasses(60).then(function() {return getUrl(iframe)});
