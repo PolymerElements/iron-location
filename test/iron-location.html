@@ -18,7 +18,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     // override edge's URL Implementation
     try {
-      debugger;
       var href = new URL('http://www.google.com/?foo bar').href;
       if (href !== 'http://www.google.com/?foo%20bar') {
         window.forceJURL = true;
@@ -88,6 +87,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script>
   'use strict';
+
+  // IE baseURI workaround
+  function getBaseURI() {
+    var baseURI = document.baseURI;
+
+    if (!baseURI) {
+      var baseTags = document.getElementsByTagName('base');
+      baseURI = baseTags.length ? baseTags[0].href : document.URL;
+    }
+
+    return baseURI;
+  }
 
   function timePasses(ms) {
     return new Promise(function(resolve) {
@@ -493,12 +504,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('with a base URI', function() {
       var baseElem;
       setup(function() {
-        expect(document.baseURI).to.be.equal(window.location.href);
+        expect(getBaseURI()).to.be.equal(window.location.href);
         baseElem = document.createElement('base');
         var href = 'https://example.com/i/dont/exist/obviously'
         baseElem.href = href;
         document.head.appendChild(baseElem);
-        expect(document.baseURI).to.be.equal(href);
+        expect(getBaseURI()).to.be.equal(href);
       });
       teardown(function() {
         document.head.removeChild(baseElem);
