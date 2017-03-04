@@ -17,7 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     // override edge's URL Implementation
     try {
-      debugger;
       var href = new URL('http://www.google.com/?foo bar').href;
       if (href !== 'http://www.google.com/?foo%20bar') {
         window.forceJURL = true;
