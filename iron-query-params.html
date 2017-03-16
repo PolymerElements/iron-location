@@ -9,91 +9,100 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 @demo demo/iron-query-params.html
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
 
 <script>
-  'use strict';
+  (function() {
+    'use strict';
 
-  Polymer({
-    is: 'iron-query-params',
+    class IronQueryParams extends Polymer.Element {
+      static get is() { return 'iron-query-params'; }
 
-    properties: {
-      paramsString: {
-        type: String,
-        notify: true,
-        observer: 'paramsStringChanged',
-      },
+      static get properties() {
+        return {
+          paramsString: {
+            type: String,
+            notify: true,
+            observer: 'paramsStringChanged',
+          },
 
-      paramsObject: {
-        type: Object,
-        notify: true,
-        value: function() {
-          return {};
+          paramsObject: {
+            type: Object,
+            notify: true,
+            value: function() {
+              return {};
+            }
+          },
+
+          _dontReact: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          'paramsObjectChanged(paramsObject.*)'
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.setAttribute('hidden', true);
+      }
+
+      paramsStringChanged() {
+        this._dontReact = true;
+        this.paramsObject = this._decodeParams(this.paramsString);
+        this._dontReact = false;
+      }
+
+      paramsObjectChanged() {
+        if (this._dontReact) {
+          return;
         }
-      },
-
-      _dontReact: {
-        type: Boolean,
-        value: false
+        this.paramsString = this._encodeParams(this.paramsObject)
+            .replace(/%3F/g, '?').replace(/%2F/g, '/').replace(/'/g, '%27');
       }
-    },
 
-    hostAttributes: {
-      hidden: true
-    },
+      _encodeParams(params) {
+        var encodedParams = [];
 
-    observers: [
-      'paramsObjectChanged(paramsObject.*)'
-    ],
+        for (var key in params) {
+          var value = params[key];
 
-    paramsStringChanged: function() {
-      this._dontReact = true;
-      this.paramsObject = this._decodeParams(this.paramsString);
-      this._dontReact = false;
-    },
+          if (value === '') {
+            encodedParams.push(encodeURIComponent(key));
 
-    paramsObjectChanged: function() {
-      if (this._dontReact) {
-        return;
-      }
-      this.paramsString = this._encodeParams(this.paramsObject)
-          .replace(/%3F/g, '?').replace(/%2F/g, '/').replace(/'/g, '%27');
-    },
-
-    _encodeParams: function(params) {
-      var encodedParams = [];
-
-      for (var key in params) {
-        var value = params[key];
-
-        if (value === '') {
-          encodedParams.push(encodeURIComponent(key));
-
-        } else if (value) {
-          encodedParams.push(
-              encodeURIComponent(key) +
-              '=' +
-              encodeURIComponent(value.toString())
-          );
+          } else if (value) {
+            encodedParams.push(
+                encodeURIComponent(key) +
+                '=' +
+                encodeURIComponent(value.toString())
+            );
+          }
         }
+        return encodedParams.join('&');
       }
-      return encodedParams.join('&');
-    },
 
-    _decodeParams: function(paramString) {
-      var params = {};
-      // Work around a bug in decodeURIComponent where + is not
-      // converted to spaces:
-      paramString = (paramString || '').replace(/\+/g, '%20');
-      var paramList = paramString.split('&');
-      for (var i = 0; i < paramList.length; i++) {
-        var param = paramList[i].split('=');
-        if (param[0]) {
-          params[decodeURIComponent(param[0])] =
-              decodeURIComponent(param[1] || '');
+      _decodeParams(paramString) {
+        var params = {};
+        // Work around a bug in decodeURIComponent where + is not
+        // converted to spaces:
+        paramString = (paramString || '').replace(/\+/g, '%20');
+        var paramList = paramString.split('&');
+        for (var i = 0; i < paramList.length; i++) {
+          var param = paramList[i].split('=');
+          if (param[0]) {
+            params[decodeURIComponent(param[0])] =
+                decodeURIComponent(param[1] || '');
+          }
         }
+        return params;
       }
-      return params;
     }
-  });
+
+    window.customElements.define(IronQueryParams.is, IronQueryParams);
+  })();
 </script>
