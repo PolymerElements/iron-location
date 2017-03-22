@@ -285,6 +285,10 @@ milliseconds.
             window.top !== window) {
           return null;
         }
+        // If the link is a download, don't intercept.
+        if (anchor.download) {
+          return null;
+        }
 
         var href = anchor.href;
 
