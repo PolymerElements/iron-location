@@ -149,20 +149,6 @@ milliseconds.
       ],
 
       attached: function() {
-        this.initialize();
-      },
-
-      ready: function() {
-        if (!Polymer.version || Polymer.version >= '2') {
-          this.initialize();
-        }
-      },
-
-      initialize: function() {
-        if (this._initialized) {
-          return;
-        }
-
         this.listen(window, 'hashchange', '_hashChanged');
         this.listen(window, 'location-changed', '_urlChanged');
         this.listen(window, 'popstate', '_urlChanged');

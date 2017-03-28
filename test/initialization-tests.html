@@ -113,11 +113,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         });
         var cases = [
-          'default-before', 'attached-before',
-          'default-after', 'attached-after',
-          'default-below', 'attached-below',
-          'default-above', 'attached-above',
-          'default-container', 'attached-container'
+          'default-before', 'attached-before', 'ready-before',
+          'default-after', 'attached-after', 'ready-after',
+          'default-below', 'attached-below', 'ready-below',
+          'default-above', 'attached-above', 'ready-above',
+          'default-container', 'attached-container', 'ready-container'
         ];
         cases.forEach(function(caseName) {
           test('the url takes priority in ' + caseName + ' initialization', function() {
