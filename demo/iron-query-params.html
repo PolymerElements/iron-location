@@ -36,20 +36,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </style>
       <iron-query-params
           id="queryParams"
-          params-string='{{paramsString}}'
+          params-string='{{paramString}}'
           params-object='{{params}}'>
       </iron-query-params>
 
       <div class="layout horizontal">
         <div class="layout vertical flex" class='inputs'>
           <div>Params as string:</div>
-          <input value="{{paramsString::input}}">
+          <input value="{{paramString::input}}">
 
           <div>Params as object</div>
           <template is="dom-if" if="{{paramsInvalid}}">
             <div>INVALID PARAMS: Should be legal JSON</div>
           </template>
-          <input value="{{paramsJson::input}}">
+          <input value="{{stringifiedParams::input}}">
         </div>
       </div>
     </template>
@@ -58,10 +58,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer({
           is: 'iron-query-params-demo',
           properties: {
-            paramsJson: {
-              observer: 'paramsJsonChanged'
-            },
-
             params: {
               observer: 'paramsChanged'
             },
@@ -70,37 +66,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               value: false,
             },
 
-            paramsString: {
+            paramString: {
               type: String,
-              observer: 'paramsStringChanged'
+              observer: 'paramStringChanged'
+            },
+
+            stringifiedParams: {
+              type: String,
+              observer: 'stringifedParamsChanged'
             }
           },
 
-          paramsStringChanged: function() {
-            this.notifyPath('params', this.$.queryParams.paramsObject);
-          },
+          paramStringChanged: function() {
+            if (this.ignore) { return; }
 
-          paramsJsonChanged: function() {
-            if (this.ignore) {
-              return;
-            }
             this.ignore = true;
+
             try {
-              this.params = JSON.parse(this.paramsJson);
-              this.notifyPath('paramsString', this.$.queryParams.paramsString);
               this.paramsInvalid = false;
             } catch(_) {
               this.paramsInvalid = true;
             }
+
+            this.ignore = false;
+          },
+
+          stringifedParamsChanged: function() {
+            if (this.ignore) { return; }
+
+            this.ignore = true;
+
+            try {
+              var newParamsObject = JSON.parse(this.stringifiedParams);
+              this.$.queryParams.paramsObject = newParamsObject;
+              this.paramsInvalid = false;
+
+            } catch (e) {
+              this.paramsInvalid = true;
+            }
+
             this.ignore = false;
           },
 
           paramsChanged: function() {
-            if (this.ignore) {
-              return;
-            }
+            if (this.ignore) { return; }
+
             this.ignore = true;
-            this.paramsJson = JSON.stringify(this.params);
+            this.stringifiedParams = JSON.stringify(this.params);
             this.paramsInvalid = false;
             this.ignore = false;
           }
