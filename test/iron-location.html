@@ -88,16 +88,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <script>
   'use strict';
 
-  // IE baseURI workaround
-  function getBaseURI() {
-    var baseURI = document.baseURI;
-
-    if (!baseURI) {
-      var baseTags = document.getElementsByTagName('base');
-      baseURI = baseTags.length ? baseTags[0].href : document.URL;
-    }
-
-    return baseURI;
+  // IE baseURI polyfill
+  if ('baseURI' in Node.prototype === false) {
+    Object.defineProperty(Node.prototype, 'baseURI', {
+      get: function() {
+        var base = (this.ownerDocument || this).querySelector('base');
+        return (base || window.location).href;
+      },
+      configurable: true,
+      enumerable: true
+    });
   }
 
   function timePasses(ms) {
@@ -504,12 +504,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('with a base URI', function() {
       var baseElem;
       setup(function() {
-        expect(getBaseURI()).to.be.equal(window.location.href);
+        expect(document.baseURI).to.be.equal(window.location.href);
         baseElem = document.createElement('base');
         var href = 'https://example.com/i/dont/exist/obviously'
         baseElem.href = href;
         document.head.appendChild(baseElem);
-        expect(getBaseURI()).to.be.equal(href);
+        expect(document.baseURI).to.be.equal(href);
       });
       teardown(function() {
         document.head.removeChild(baseElem);
