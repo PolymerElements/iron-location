@@ -12,21 +12,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script>
   Polymer({
-    is: 'on-ready',
-    properties: {
-      val: {
-        type: String,
-        notify: true,
-        value: 'on-ready-default-value'
-      }
-    },
-
-    ready: function() {
-      this.val = 'on-ready';
-    }
-  });
-
-  Polymer({
     is: 'default-value',
     properties: {
       value: {
@@ -50,6 +35,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       if (this.val === 'on-attached-default-value') {
         this.val = 'on-attached';
       }
+    }
+  });
+
+  Polymer({
+    is: 'on-ready',
+    properties: {
+      val: {
+        type: String,
+        notify: true,
+        value: 'on-ready-default-value'
+      }
+    },
+
+    ready: function() {
+      this.val = 'on-ready';
     }
   });
 
