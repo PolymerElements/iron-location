@@ -55,14 +55,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     _encodeParams: function(params) {
       var encodedParams = [];
       for (var key in params) {
-        var value = params[key];
+        var value = params[key].toString();
         if (value === '') {
           encodedParams.push(encodeURIComponent(key));
         } else if (value) {
           encodedParams.push(
               encodeURIComponent(key) +
               '=' +
-              encodeURIComponent(value.toString())
+              encodeURIComponent(value)
           );
         }
       }
