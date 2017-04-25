@@ -55,15 +55,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     _encodeParams: function(params) {
       var encodedParams = [];
       for (var key in params) {
-        var value = params[key];
-        if (value === '') {
-          encodedParams.push(encodeURIComponent(key));
-        } else if (value) {
-          encodedParams.push(
-              encodeURIComponent(key) +
-              '=' +
-              encodeURIComponent(value.toString())
-          );
+        var values = params[key];
+
+        if (values) {
+          values.forEach(value => {
+            if (value === '') {
+              encodedParams.push(encodeURIComponent(key));
+            } else if (value.length > 0) {
+
+              encodedParams.push(
+                  encodeURIComponent(key) +
+                  '=' +
+                  encodeURIComponent(value.toString())
+              );
+            }
+          });
         }
       }
       return encodedParams.join('&');
@@ -79,8 +85,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       for (var i = 0; i < paramList.length; i++) {
         var param = paramList[i].split('=');
         if (param[0]) {
-          params[decodeURIComponent(param[0])] =
-              decodeURIComponent(param[1] || '');
+          var param0 = decodeURIComponent(param[0]);
+          if (!params[param0]) {
+            params[param0] = [];
+          }
+          params[param0].push(decodeURIComponent(param[1] || ''));
         }
       }
       return params;
