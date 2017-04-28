@@ -55,7 +55,7 @@ milliseconds.
 
     var workingURL;
 
-    var urlDoc;
+    var urlDoc, urlBase, anchor;
 
     /**
      * @type {string} path
@@ -78,13 +78,13 @@ milliseconds.
       } else {
         if (!urlDoc) {
           urlDoc = document.implementation.createHTMLDocument('url');
-          urlDoc.__base = urlDoc.createElement('base');
-          urlDoc.head.appendChild(urlDoc.__base);
-          urlDoc.__anchor = urlDoc.createElement('a');
+          urlBase = urlDoc.createElement('base');
+          urlDoc.head.appendChild(urlBase);
+          anchor = urlDoc.createElement('a');
         }
-        urlDoc.__base.href = base;
-        urlDoc.__anchor.href = path;
-        url = urlDoc.__anchor;
+        urlBase.href = base;
+        anchor.href = path.replace(/ /, '%20');
+        url = anchor;
       }
       return url;
     }
@@ -366,14 +366,18 @@ milliseconds.
         if (window.location.origin) {
           origin = window.location.origin;
         } else {
-          origin = window.location.protocol + '//' + window.location.hostname;
-
-          if (window.location.port) {
-            origin += ':' + window.location.port;
-          }
+          origin = window.location.protocol + '//' + window.location.host;
         }
 
-        if (url.origin !== origin) {
+        var urlOrigin;
+
+        if (url.origin) {
+          urlOrigin = url.origin;
+        } else {
+          urlOrigin = url.protocol + '//' + url.host;
+        }
+
+        if (urlOrigin !== origin) {
           return null;
         }
 
