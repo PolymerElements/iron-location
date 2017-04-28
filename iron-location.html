@@ -53,6 +53,41 @@ milliseconds.
   (function() {
     'use strict';
 
+    var workingURL;
+
+    var urlDoc;
+
+    /**
+     * @type {string} path
+     * @type {string=} base
+     * @return {URL|HTMLAnchorElement}
+     */
+    function resolveURL(path, base) {
+      var url;
+      if (workingURL === undefined) {
+        workingURL = false;
+        try {
+          var u = new URL('b', 'http://a');
+          u.pathname = 'c%20d';
+          workingURL = (u.href === 'http://a/c%20d');
+        } catch (e) {}
+      }
+      if (workingURL) {
+        url = new URL(path, base);
+      } else {
+        if (!urlDoc) {
+          urlDoc = document.implementation.createHTMLDocument('url');
+          urlDoc.__base = urlDoc.createElement('base');
+          urlDoc.head.appendChild(urlDoc.__base);
+          urlDoc.__anchor = urlDoc.createElement('a');
+        }
+        urlDoc.__base.href = base;
+        urlDoc.__anchor.href = path;
+        url = urlDoc.__anchor;
+      }
+      return url;
+    }
+
     Polymer({
       is: 'iron-location',
 
@@ -217,8 +252,7 @@ milliseconds.
 
         var newUrl = this._getUrl();
         // Need to use a full URL in case the containing page has a base URI.
-        var fullNewUrl = new URL(
-            newUrl, window.location.protocol + '//' + window.location.host).href;
+        var fullNewUrl = resolveURL(newUrl, window.location.protocol + '//' + window.location.host).href;
         var now = window.performance.now();
         var shouldReplace = this._lastChangedAt + this.dwellTime > now;
         this._lastChangedAt = now;
@@ -320,9 +354,9 @@ milliseconds.
         var url;
 
         if (document.baseURI != null) {
-          url = new URL(href, /** @type {string} */(document.baseURI));
+          url = resolveURL(href, /** @type {string} */(document.baseURI));
         } else {
-          url = new URL(href);
+          url = resolveURL(href);
         }
 
         var origin;
@@ -351,7 +385,7 @@ milliseconds.
         }
 
         // Need to use a full URL in case the containing page has a base URI.
-        var fullNormalizedHref = new URL(
+        var fullNormalizedHref = resolveURL(
             normalizedHref, window.location.href).href;
         return fullNormalizedHref;
       },
