@@ -83,7 +83,7 @@ milliseconds.
           anchor = urlDoc.createElement('a');
         }
         urlBase.href = base;
-        anchor.href = path.replace(/ /, '%20');
+        anchor.href = path.replace(/ /g, '%20');
         url = anchor;
       }
       return url;
@@ -382,6 +382,11 @@ milliseconds.
         }
 
         var normalizedHref = url.pathname + url.search + url.hash;
+
+        // pathname should start with '/', but may not if `new URL` is not supported
+        if (normalizedHref[0] !== '/') {
+          normalizedHref = '/' + normalizedHref;
+        }
 
         // If we've been configured not to handle this url... don't handle it!
         if (this._urlSpaceRegExp &&
