@@ -58,12 +58,11 @@ milliseconds.
     var urlDoc, urlBase, anchor;
 
     /**
-     * @type {string} path
-     * @type {string=} base
-     * @return {URL|HTMLAnchorElement}
+     * @param {string} path
+     * @param {string=} base
+     * @return {!URL|!HTMLAnchorElement}
      */
     function resolveURL(path, base) {
-      var url;
       if (workingURL === undefined) {
         workingURL = false;
         try {
@@ -74,19 +73,17 @@ milliseconds.
         } catch (e) {}
       }
       if (workingURL) {
-        url = new URL(path, base);
-      } else {
-        if (!urlDoc) {
-          urlDoc = document.implementation.createHTMLDocument('url');
-          urlBase = urlDoc.createElement('base');
-          urlDoc.head.appendChild(urlBase);
-          anchor = urlDoc.createElement('a');
-        }
-        urlBase.href = base;
-        anchor.href = path.replace(/ /g, '%20');
-        url = anchor;
+        return new URL(path, base);
       }
-      return url;
+      if (!urlDoc) {
+        urlDoc = document.implementation.createHTMLDocument('url');
+        urlBase = urlDoc.createElement('base');
+        urlDoc.head.appendChild(urlBase);
+        anchor = /** @type {HTMLAnchorElement}*/(urlDoc.createElement('a'));
+      }
+      urlBase.href = base;
+      anchor.href = path.replace(/ /g, '%20');
+      return anchor;
     }
 
     Polymer({
