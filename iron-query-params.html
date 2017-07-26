@@ -32,6 +32,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      // TODO(emarquez): remove this property and paramsObject inital value on
+      // next major bump.
+      lazyLoaded: {
+        type: Boolean,
+        value: false
+      },
+
       _dontReact: {
         type: Boolean,
         value: false
@@ -43,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     observers: [
-      'paramsObjectChanged(paramsObject.*)'
+      'paramsObjectChanged(paramsObject.*, lazyLoaded)'
     ],
 
     paramsStringChanged: function() {
@@ -52,10 +59,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this._dontReact = false;
     },
 
+    detached: function() {
+      this.__ignoreLazy = false;
+    },
+
     paramsObjectChanged: function() {
-      if (this._dontReact) {
+      if (this._dontReact || (this.lazyLoaded && !this.__ignoreLazy)) {
+        this.__ignoreLazy = true;
         return;
       }
+
       this.paramsString = this._encodeParams(this.paramsObject)
           .replace(/%3F/g, '?').replace(/%2F/g, '/').replace(/'/g, '%27');
     },
