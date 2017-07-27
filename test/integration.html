@@ -92,22 +92,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(ironLocationQuery).to.contain(ironLocation.query);
           expect(ironLocationQuery).to.contain(ironQueryParams.paramsString);
           if (plainTextQuery) {
-            expect('').to.be.equal(ironQueryParams.paramsObject[plainTextQuery])
+            expect('').to.be.equal(ironQueryParams.paramsObject.get(plainTextQuery))
           } else {
-            expect(ironQueryParams.paramsObject[plainTextQuery]).to.be.undefined;
+            expect(ironQueryParams.paramsObject.get(plainTextQuery)).to.be.null;
           }
         }
       });
 
       test('propagations from iqp to location', function() {
         var queryEncodingExamples = {
-          'foo': '?foo',
-          '': '',
-          'foo bar': '?foo%20bar',
-          'foo#bar': '?foo%23bar',
-          'foo?bar': '?foo?bar',
-          '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
-          'foo/bar/baz': '?foo/bar/baz'
+          'foo': '?foo=',
+          '': '?=',
+          'foo bar': '?foo%20bar=',
+          'foo#bar': '?foo%23bar=',
+          'foo?bar': '?foo?bar=',
+          '/foo\'bar\'baz': ['?/foo%27bar%27baz=', '?/foo\'bar\'baz='],
+          'foo/bar/baz': '?foo/bar/baz='
         };
         for (var plainTextQuery in queryEncodingExamples) {
           var encodedQueries = queryEncodingExamples[plainTextQuery];
@@ -121,10 +121,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
           }
 
-          var newParamsObject = {};
-          newParamsObject[plainTextQuery] = '';
+          var newParamsObject = new URLSearchParams();
+          newParamsObject.append(plainTextQuery, '');
 
           ironQueryParams.paramsObject = newParamsObject;
+          // might need to notify
           expect(encodedQueries).to.contain(window.location.search);
           expect(ironLocationQuery).to.contain(ironLocation.query);
         }
