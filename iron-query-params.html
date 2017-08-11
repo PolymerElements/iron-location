@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paramsString: {
         type: String,
         notify: true,
+        value: '',
         observer: 'paramsStringChanged',
       },
 
@@ -34,7 +35,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _dontReact: {
         type: Boolean,
-        value: false
+        value: false,
+      },
+
+      _init: {
+        type: Boolean,
+        value: true,
       }
     },
 
@@ -53,7 +59,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     paramsObjectChanged: function() {
-      if (this._dontReact) {
+      if (Object.keys(this.paramsObject).length) {
+        this._init = false;
+      }
+      if (this._dontReact || this._init) {
         return;
       }
       this.paramsString = this._encodeParams(this.paramsObject)
