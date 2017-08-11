@@ -26,6 +26,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-query-params></iron-query-params>
     </template>
   </test-fixture>
+  <test-fixture id="PresetQueryParams">
+    <template>
+      <iron-query-params
+        params-string="a=b"
+      ></iron-query-params>
+    </template>
+  </test-fixture>
 
   <script>
     'use strict';
@@ -95,6 +102,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         paramsElem.paramsString = 'key=value+with+spaces';
         expect(paramsElem.paramsObject).to.deep.equal(
             {key: 'value with spaces'});
+      });
+    });
+
+    // NOTE: This is exactly how iron-query-params is used within app-location
+    suite('<iron-query-params query-string="a=b">', function() {
+      var paramsElem;
+      setup(function() {
+        paramsElem = fixture('PresetQueryParams');
+      });
+
+      test('initializing with presets', function() {
+        expect(paramsElem.paramsString).to.be.eq('a=b');
+        expect(paramsElem.paramsObject).to.deep.equal(
+          {a: 'b'});
       });
     });
 
