@@ -379,11 +379,14 @@ milliseconds.
           // window.location.host
           var urlHost = url.host;
           var urlPort = url.port;
+          var urlProtocol = url.protocol;
+          var isExtraneousHTTPS = urlProtocol === 'https:' && urlPort === '443';
+          var isExtraneousHTTP = urlProtocol === 'http:' && urlPort === '80';
 
-          if (urlPort === '443' || urlPort === '80') {
+          if (isExtraneousHTTPS || isExtraneousHTTP) {
             urlHost = url.hostname;
           }
-          urlOrigin = url.protocol + '//' + urlHost;
+          urlOrigin = urlProtocol + '//' + urlHost;
         }
 
         if (urlOrigin !== origin) {
