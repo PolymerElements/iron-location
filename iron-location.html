@@ -377,12 +377,11 @@ milliseconds.
         } else {
           // IE always adds port number on HTTP and HTTPS on <a>.host but not on
           // window.location.host
-          var protocolRegex = /:(80|443)$/;
           var urlHost = url.host;
-          var locationHostPort = this.__location.host.match(protocolRegex);
+          var urlPort = url.port;
 
-          if (!locationHostPort) {
-            urlHost = urlHost.replace(protocolRegex, '');
+          if (urlPort === '443' || urlPort === '80') {
+            urlHost = url.hostname;
           }
           urlOrigin = url.protocol + '//' + urlHost;
         }
