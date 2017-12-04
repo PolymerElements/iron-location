@@ -94,7 +94,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             key = param[0].replace(/%([^\d].)/, "%25$1");
             value = param[1].replace(/%([^\d].)/, "%25$1");
             params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-            params[decodeURIComponent(key)] = decodeURIComponent(value || '');
           } catch (e) {
             // console.log(e.message);
           }
