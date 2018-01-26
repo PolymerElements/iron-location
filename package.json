@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/iron-location",
+  "private": true,
+  "description": "Bidirectional data binding into the page's URL.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-location.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}
