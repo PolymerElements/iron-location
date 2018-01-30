@@ -1,0 +1,27 @@
+<script>
+  var URLSearchParamsUtil = (function() {
+    return {
+      equal: function(url1, url2) {
+        var url1Array = Array.from(url1.entries()),
+            url2Array = Array.from(url2.entries());
+        if (url1Array.length !== url2Array.length) {
+          return false;
+        }
+        for (var i = 0; i < url1Array.length; ++i) {
+          if (url1Array[i][0] !== url2Array[i][0] ||
+              url1Array[i][1] !== url2Array[i][1]) {
+            return false;
+          }
+        }
+        return true;
+      },
+      objectToArray: function(obj) {
+        var arr = [];
+        for (var prop in obj) {
+          arr.push([prop, obj[prop]]);
+        }
+        return arr;
+      }
+    }
+  })();
+</script>

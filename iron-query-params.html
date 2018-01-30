@@ -10,7 +10,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 @demo demo/iron-query-params.html
 -->
 <link rel="import" href="../polymer/polymer.html">
-
+<!-- Polyfill URLSearchParams 
+  polyfill provided by:
+    Andrea Giammarchi (https://github.com/WebReflection/url-search-params)
+  /*! (C) Andrea Giammarchi - Mit Style License */
+-->
+<script src="../url-search-params/build/url-search-params.js"></script>
 <script>
   'use strict';
 
@@ -28,7 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: Object,
         notify: true,
         value: function() {
-          return {};
+          return new URLSearchParams();
         }
       },
 
@@ -61,39 +66,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     _encodeParams: function(params) {
-      var encodedParams = [];
-
-      for (var key in params) {
-        var value = params[key];
-
-        if (value === '') {
-          encodedParams.push(encodeURIComponent(key));
-
-        } else if (value) {
-          encodedParams.push(
-              encodeURIComponent(key) +
-              '=' +
-              encodeURIComponent(value.toString())
-          );
-        }
-      }
-      return encodedParams.join('&');
-    },
-
-    _decodeParams: function(paramString) {
-      var params = {};
+      let paramString = params.toString();
       // Work around a bug in decodeURIComponent where + is not
       // converted to spaces:
       paramString = (paramString || '').replace(/\+/g, '%20');
-      var paramList = paramString.split('&');
-      for (var i = 0; i < paramList.length; i++) {
-        var param = paramList[i].split('=');
-        if (param[0]) {
-          params[decodeURIComponent(param[0])] =
-              decodeURIComponent(param[1] || '');
-        }
-      }
-      return params;
+      return paramString;
+    },
+
+    _decodeParams: function(paramString) {
+      return new URLSearchParams(paramString);
     }
   });
 </script>

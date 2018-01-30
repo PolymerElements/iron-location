@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
   <link rel="import" href="../iron-query-params.html">
+  <link rel="import" href="./urlsearchparams.html">
 </head>
 <body>
 
@@ -33,6 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('<iron-query-params>', function () {
 
       var paramsElem;
+      var expectedSearchParams;
       setup(function() {
         paramsElem = fixture('BasicQueryParams');
       });
@@ -40,17 +42,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('basic functionality with ?key=value params', function() {
         // Check initialization
         expect(paramsElem.paramsString).to.be.eq('');
-        expect(paramsElem.paramsObject).to.deep.eq({});
+        expectedSearchParams = new URLSearchParams();
+        expect(URLSearchParamsUtil.equal(
+          paramsElem.paramsObject,
+          expectedSearchParams
+        )).to.be.true;
 
         // Check the mapping from paramsString to paramsObject.
         paramsElem.paramsString = 'greeting=hello&target=world';
-        expect(paramsElem.paramsObject).to.deep.equal(
-            {greeting: 'hello', target: 'world'});
+        expectedSearchParams = new URLSearchParams([
+          ['greeting', 'hello'], 
+          ['target', 'world']
+        ]);
+        expect(URLSearchParamsUtil.equal(
+          paramsElem.paramsObject,
+          expectedSearchParams
+        )).to.be.true;
+
+        // Check the mapping from paramsString to paramsObject 
+        // with multiple values for the same key
+        // NOTE: order matters in the creation for URLSearchParams
+        //       the spec has a sequence (which is ordered) as one of
+        //       the valid constructor inits. This could be ameliorated
+        //       with the .sort method, but only Firefox implements it
+        //       as of July 2017. 
+        paramsElem.paramsString = 
+          'greeting=hello&target=world&greeting=hola&target=mundo';
+        expectedSearchParams = new URLSearchParams([
+          ['greeting', 'hello'],
+          ['target', 'world'],
+          ['greeting', 'hola'],
+          ['target', 'mundo']
+        ]);
+        expect(URLSearchParamsUtil.equal(
+          paramsElem.paramsObject,
+          expectedSearchParams
+        )).to.be.true;
 
         // Check the mapping from paramsObject back to paramsString.
-        paramsElem.set('paramsObject.another', 'key');
+        let newParamsObject = new URLSearchParams(paramsElem.paramsObject);
+        newParamsObject.append('another', 'key');
+        paramsElem.set('paramsObject', newParamsObject);
         expect(paramsElem.paramsString).to.be.equal(
-            'greeting=hello&target=world&another=key');
+          'greeting=hello&target=world&greeting=hola&target=mundo&another=key');
       });
       test('encoding of params', function() {
         var mappings = [
@@ -59,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             object: {'a': 'b'}
           },
           {
-            string: 'debug&ok',
+            string: 'debug=&ok=',
             object: {'debug': '', 'ok': ''}
           },
           {
@@ -74,27 +108,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         mappings.forEach(function(mapping) {
           // Clear
-          paramsElem.paramsObject = {};
+          paramsElem.paramsObject = new URLSearchParams();
           expect(paramsElem.paramsString).to.be.equal('');
 
           // Test going from string to object
           paramsElem.paramsString = mapping.string;
-          expect(paramsElem.paramsObject).to.deep.equal(mapping.object);
+          console.log(paramsElem.paramsObject.toString(), mapping.string);
+          expect(URLSearchParamsUtil.equal(
+            paramsElem.paramsObject,
+            new URLSearchParams(
+              URLSearchParamsUtil.objectToArray(mapping.object)
+            )
+          )).to.be.true;
 
           // Clear again.
-          paramsElem.paramsObject = {};
+          paramsElem.paramsObject = new URLSearchParams();
           expect(paramsElem.paramsString).to.be.equal('');
 
           // Test going from object to string
-          paramsElem.paramsObject = mapping.object;
+          paramsElem.paramsObject = new URLSearchParams(
+            URLSearchParamsUtil.objectToArray(mapping.object)
+          );
           expect(paramsElem.paramsString).to.be.equal(mapping.string);
         });
       });
       test('query strings with alternative encodings', function() {
         // Check the mapping for querystrings with + instead of %20.
         paramsElem.paramsString = 'key=value+with+spaces';
-        expect(paramsElem.paramsObject).to.deep.equal(
-            {key: 'value with spaces'});
+        expect(URLSearchParamsUtil.equal(
+          paramsElem.paramsObject,
+          new URLSearchParams(
+            URLSearchParamsUtil.objectToArray({key: 'value with spaces'})
+          )
+        )).to.be.true;
       });
     });
 
