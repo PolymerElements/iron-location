@@ -10,7 +10,7 @@
 
 /// <reference path="../polymer/types/polymer.d.ts" />
 
-interface IronQueryParams extends Polymer.Element {
+interface IronQueryParamsElement extends Polymer.Element {
   paramsString: string|null|undefined;
   paramsObject: object|null|undefined;
   _dontReact: boolean|null|undefined;
@@ -22,5 +22,5 @@ interface IronQueryParams extends Polymer.Element {
 }
 
 interface HTMLElementTagNameMap {
-  "iron-query-params": IronQueryParams;
+  "iron-query-params": IronQueryParamsElement;
 }

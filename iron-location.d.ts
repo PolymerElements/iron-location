@@ -45,7 +45,7 @@
  * entries to the user's history if the URL stays unchanged for `dwellTime`
  * milliseconds.
  */
-interface IronLocation extends Polymer.Element {
+interface IronLocationElement extends Polymer.Element {
 
   /**
    * The pathname component of the URL.
@@ -121,5 +121,5 @@ interface IronLocation extends Polymer.Element {
 }
 
 interface HTMLElementTagNameMap {
-  "iron-location": IronLocation;
+  "iron-location": IronLocationElement;
 }
