@@ -1,5 +1,6 @@
 {
   "name": "@polymer/iron-location",
+  "version": "2.1.0",
   "private": true,
   "description": "Bidirectional data binding into the page's URL.",
   "repository": {
