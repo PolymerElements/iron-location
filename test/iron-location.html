@@ -198,9 +198,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         for (var plainTextQuery in queryEncodingExamples) {
           var encodedQueries = queryEncodingExamples[plainTextQuery];
-          if (typeof encodedQueries === 'string') {
-            encodedQueries = [encodedQueries];
-          }
 
           var ironLocationQuery = encodedQueries.map(function(value) {
             return value.substring(1);
@@ -223,25 +220,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       test('dealing with queries with unusual characters', function() {
         testQuery({
-          'foo': '?foo',
-          '': '',
-          'foo bar': '?foo%20bar',
-          'foo#bar': '?foo%23bar',
-          'foo?bar': '?foo?bar',
+          'foo': ['?foo'],
+          '': [''],
+          'foo bar': ['?foo%20bar'],
+          'foo#bar': ['?foo%23bar'],
+          'foo?bar': ['?foo?bar'],
           '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
-          'foo/bar/baz': '?foo/bar/baz'
+          'foo/bar/baz': ['?foo/bar/baz']
         }, false)
       });
       test('dealing with queries with unusual characters - encodeSpaceAsPlusInQuery', function() {
         testQuery({
-          'foo': '?foo',
-          '': '',
+          'foo': ['?foo'],
+          '': [''],
           'foo bar': ['?foo%2Bbar', '?foo+bar'],
-          'foo#bar': '?foo%23bar',
-          'foo+bar': '?foo%2Bbar',
-          'foo?bar': '?foo?bar',
+          'foo#bar': ['?foo%23bar'],
+          'foo+bar': ['?foo%2Bbar'],
+          'foo?bar': ['?foo?bar'],
           '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
-          'foo/bar/baz': '?foo/bar/baz'
+          'foo/bar/baz': ['?foo/bar/baz']
         }, true)
       });
 
