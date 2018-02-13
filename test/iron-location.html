@@ -231,7 +231,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
       test('dealing with queries with unusual characters - encodeSpaceAsPlusInQuery', function() {
         testQuery({
-          'foo': ['?foo'],
           '': [''],
           'foo bar': ['?foo%20bar', '?foo+bar'],
           'foo#bar': ['?foo%23bar'],
