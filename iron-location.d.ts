@@ -92,13 +92,13 @@ interface IronLocationElement extends Polymer.Element {
   _lastChangedAt: number|null|undefined;
   _initialized: boolean|null|undefined;
   hostAttributes: object|null;
-  created(): any;
-  attached(): any;
-  detached(): any;
-  _hashChanged(): any;
-  _urlChanged(): any;
+  created(): void;
+  attached(): void;
+  detached(): void;
+  _hashChanged(): void;
+  _urlChanged(): void;
   _getUrl(): any;
-  _updateUrl(): any;
+  _updateUrl(): void;
 
   /**
    * A necessary evil so that links work as expected. Does its best to
@@ -106,7 +106,7 @@ interface IronLocationElement extends Polymer.Element {
    *
    * @param event .
    */
-  _globalOnClick(event: MouseEvent|null): any;
+  _globalOnClick(event: MouseEvent|null): void;
 
   /**
    * Returns the absolute URL of the link (if any) that this click event
