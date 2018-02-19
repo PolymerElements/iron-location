@@ -44,7 +44,7 @@ iron-location is only active while it is attached to the document.
 #### Links
 
 While iron-location is active in the document it will intercept clicks on links
-within your site, updating the URL pushing the updated URL out through the
+within your site and publish the updated URL via the
 databinding system. iron-location only intercepts clicks with the intent to
 open in the same window, so middle mouse clicks and ctrl/cmd clicks work fine.
 
