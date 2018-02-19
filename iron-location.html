@@ -12,12 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!--
 
-The `iron-location` element manages binding to and from the current URL.
+The `iron-location` element manages binding to and from the current URL and 
+thus fits well as a base building block for routing systems.  
 
-iron-location is the first, and lowest level element in the Polymer team's
-routing system. This is a beta release of iron-location as we continue work
-on higher level elements, and as such iron-location may undergo breaking
-changes.
+For an example of such a use case see the 
+[app-location](https://github.com/PolymerElements/app-route/blob/master/app-location.html) element.
+
+This is a beta release of `iron-location` and it may may undergo breaking
+changes as feedback is collected from the design of higher elements, such as `app-location`.
 
 #### Properties
 
@@ -29,20 +31,20 @@ When the URL is: `/search?query=583#details` iron-location's properties will be:
 
 These bindings are bidirectional. Modifying them will in turn modify the URL.
 
-iron-location is only active while it is attached to the document.
+The `iron-location` element is only active while it is attached to the document.
 
 #### Links
 
-While iron-location is active in the document it will intercept clicks on links
-within your site, updating the URL pushing the updated URL out through the
-databinding system. iron-location only intercepts clicks with the intent to
-open in the same window, so middle mouse clicks and ctrl/cmd clicks work fine.
+The `iron-location` element intercepts clicks on links
+and publishes them via the the
+databinding system. Only clicks that perform navigation n the same window 
+are intercepted, so middle mouse clicks and ctrl/cmd clicks work fine.
 
-You can customize this behavior with the `urlSpaceRegex`.
+Customize this behavior with the `urlSpaceRegex` attribute.
 
 #### Dwell Time
 
-iron-location protects against accidental history spamming by only adding
+Accidental history spamming is avoided by only adding
 entries to the user's history if the URL stays unchanged for `dwellTime`
 milliseconds.
 
