@@ -13,9 +13,15 @@
 interface IronQueryParamsElement extends Polymer.Element {
   paramsString: string|null|undefined;
   paramsObject: object|null|undefined;
+
+  /**
+   * next major bump.
+   */
+  lazyLoaded: boolean|null|undefined;
   _dontReact: boolean|null|undefined;
   hostAttributes: object|null;
   paramsStringChanged(): void;
+  detached(): void;
   paramsObjectChanged(): void;
   _encodeParams(params: any): any;
   _decodeParams(paramString: any): any;
