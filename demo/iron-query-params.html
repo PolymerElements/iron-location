@@ -9,6 +9,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <html>
+
 <head>
 
   <title>iron-query-params</title>
@@ -17,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../iron-query-params.html">
   <link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
 </head>
+
 <body>
 
   <dom-module id='iron-query-params-demo'>
@@ -25,19 +27,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         div.inputs {
           margin-bottom: 15px;
         }
+
         label {
           display: inline-block;
           width: 100px;
         }
+
         h3 {
           padding: 0;
           margin: 0;
         }
       </style>
-      <iron-query-params
-          id="queryParams"
-          params-string='{{paramString}}'
-          params-object='{{params}}'>
+      <iron-query-params id="queryParams" params-string='{{paramString}}' params-object='{{params}}'>
       </iron-query-params>
 
       <div class="layout horizontal">
@@ -54,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </template>
     <script>
-      window.addEventListener('WebComponentsReady', function() {
+      window.addEventListener('WebComponentsReady', function () {
         Polymer({
           is: 'iron-query-params-demo',
           properties: {
@@ -77,21 +78,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           },
 
-          paramStringChanged: function() {
+          paramStringChanged: function () {
             if (this.ignore) { return; }
 
             this.ignore = true;
 
             try {
               this.paramsInvalid = false;
-            } catch(_) {
+            } catch (_) {
               this.paramsInvalid = true;
             }
 
             this.ignore = false;
           },
 
-          stringifedParamsChanged: function() {
+          stringifedParamsChanged: function () {
             if (this.ignore) { return; }
 
             this.ignore = true;
@@ -108,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.ignore = false;
           },
 
-          paramsChanged: function() {
+          paramsChanged: function () {
             if (this.ignore) { return; }
 
             this.ignore = true;
@@ -123,4 +124,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <iron-query-params-demo></iron-query-params-demo>
 </body>
+
 </html>

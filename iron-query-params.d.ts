@@ -22,5 +22,5 @@ interface IronQueryParamsElement extends Polymer.Element {
 }
 
 interface HTMLElementTagNameMap {
-  "iron-query-params": IronQueryParamsElement;
+  'iron-query-params': IronQueryParamsElement;
 }

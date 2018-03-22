@@ -50,7 +50,7 @@ milliseconds.
 
  -->
 <script>
-  (function() {
+  (function () {
     'use strict';
 
     var workingURL;
@@ -70,7 +70,7 @@ milliseconds.
           u.pathname = 'c%20d';
           workingURL = (u.href === 'http://a/c%20d');
           workingURL = workingURL && (new URL('http://www.google.com/?foo bar').href === 'http://www.google.com/?foo%20bar');
-        } catch (e) {}
+        } catch (e) { }
       }
       if (workingURL) {
         return new URL(path, base);
@@ -96,7 +96,7 @@ milliseconds.
         path: {
           type: String,
           notify: true,
-          value: function() {
+          value: function () {
             return window.decodeURIComponent(window.location.pathname);
           }
         },
@@ -107,7 +107,7 @@ milliseconds.
         query: {
           type: String,
           notify: true,
-          value: function() {
+          value: function () {
             return window.location.search.slice(1);
           }
         },
@@ -118,7 +118,7 @@ milliseconds.
         hash: {
           type: String,
           notify: true,
-          value: function() {
+          value: function () {
             return window.decodeURIComponent(window.location.hash.slice(1));
           }
         },
@@ -194,11 +194,11 @@ milliseconds.
         '_updateUrl(path, query, hash)'
       ],
 
-      created: function() {
+      created: function () {
         this.__location = window.location;
       },
 
-      attached: function() {
+      attached: function () {
         this.listen(window, 'hashchange', '_hashChanged');
         this.listen(window, 'location-changed', '_urlChanged');
         this.listen(window, 'popstate', '_urlChanged');
@@ -211,7 +211,7 @@ milliseconds.
         this._urlChanged();
       },
 
-      detached: function() {
+      detached: function () {
         this.unlisten(window, 'hashchange', '_hashChanged');
         this.unlisten(window, 'location-changed', '_urlChanged');
         this.unlisten(window, 'popstate', '_urlChanged');
@@ -219,11 +219,11 @@ milliseconds.
         this._initialized = false;
       },
 
-      _hashChanged: function() {
+      _hashChanged: function () {
         this.hash = window.decodeURIComponent(this.__location.hash.substring(1));
       },
 
-      _urlChanged: function() {
+      _urlChanged: function () {
         // We want to extract all info out of the updated URL before we
         // try to write anything back into it.
         //
@@ -237,13 +237,13 @@ milliseconds.
         this._updateUrl();
       },
 
-      _getUrl: function() {
+      _getUrl: function () {
         var partiallyEncodedPath = window.encodeURI(
-            this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
+          this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
         var partiallyEncodedQuery = '';
         if (this.query) {
           partiallyEncodedQuery = '?' + this.query.replace(/\#/g, '%23');
-          if(this.encodeSpaceAsPlusInQuery) {
+          if (this.encodeSpaceAsPlusInQuery) {
             partiallyEncodedQuery = partiallyEncodedQuery.replace(/\+/g, '%2B').replace(/ /g, '+').replace(/%20/g, '+');
           }
         }
@@ -252,18 +252,18 @@ milliseconds.
           partiallyEncodedHash = '#' + window.encodeURI(this.hash);
         }
         return (
-            partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
+          partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
       },
 
-      _updateUrl: function() {
+      _updateUrl: function () {
         if (this._dontUpdateUrl || !this._initialized) {
           return;
         }
 
         if (this.path === window.decodeURIComponent(this.__location.pathname) &&
-            this.query === this.__location.search.substring(1) &&
-            this.hash === window.decodeURIComponent(
-                this.__location.hash.substring(1))) {
+          this.query === this.__location.search.substring(1) &&
+          this.hash === window.decodeURIComponent(
+            this.__location.hash.substring(1))) {
           // Nothing to do, the current URL is a representation of our properties.
           return;
         }
@@ -281,7 +281,7 @@ milliseconds.
           window.history.pushState({}, '', fullNewUrl);
         }
 
-        this.fire('location-changed', {}, {node: window});
+        this.fire('location-changed', {}, { node: window });
       },
 
       /**
@@ -290,7 +290,7 @@ milliseconds.
        *
        * @param {MouseEvent} event .
        */
-      _globalOnClick: function(event) {
+      _globalOnClick: function (event) {
         // If another event handler has stopped this event then there's nothing
         // for us to do. This can happen e.g. when there are multiple
         // iron-location elements in a page.
@@ -313,7 +313,7 @@ milliseconds.
         }
 
         window.history.pushState({}, '', href);
-        this.fire('location-changed', {}, {node: window});
+        this.fire('location-changed', {}, { node: window });
       },
 
       /**
@@ -324,7 +324,7 @@ milliseconds.
        * @param {MouseEvent} event .
        * @return {string?} .
        */
-      _getSameOriginLinkHref: function(event) {
+      _getSameOriginLinkHref: function (event) {
         // We only care about left-clicks.
         if (event.button !== 0) {
           return null;
@@ -360,11 +360,11 @@ milliseconds.
 
         // If the link is for an existing parent frame, don't intercept.
         if ((anchor.target === '_top' ||
-            anchor.target === '_parent') &&
-            window.top !== window) {
+          anchor.target === '_parent') &&
+          window.top !== window) {
           return null;
         }
-        
+
         // If the link is a download, don't intercept.
         if (anchor.download) {
           return null;
@@ -423,17 +423,17 @@ milliseconds.
 
         // If we've been configured not to handle this url... don't handle it!
         if (this._urlSpaceRegExp &&
-            !this._urlSpaceRegExp.test(normalizedHref)) {
+          !this._urlSpaceRegExp.test(normalizedHref)) {
           return null;
         }
 
         // Need to use a full URL in case the containing page has a base URI.
         var fullNormalizedHref = resolveURL(
-            normalizedHref, this.__location.href).href;
+          normalizedHref, this.__location.href).href;
         return fullNormalizedHref;
       },
 
-      _makeRegExp: function(urlSpaceRegex) {
+      _makeRegExp: function (urlSpaceRegex) {
         return RegExp(urlSpaceRegex);
       }
     });
