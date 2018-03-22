@@ -9,6 +9,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <html>
+
 <head>
 
   <title>iron-location</title>
@@ -19,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../../iron-demo-helpers/url-bar.html">
 </head>
+
 <body>
   <url-bar></url-bar>
 
@@ -28,6 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         div.inputs {
           margin-bottom: 15px;
         }
+
         label {
           display: inline-block;
           width: 100px;
@@ -38,7 +41,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin: 0;
         }
 
-        .inputs, .history_entries {
+        .inputs,
+        .history_entries {
           @apply --layout-vertical;
           @apply --layout-flex;
           padding: 20px;
@@ -54,8 +58,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin-bottom: 15px;
         }
       </style>
-      <iron-location path="{{path}}" hash="{{hash}}" query="{{query}}"
-                     dwell-time="{{dwellTime}}">
+      <iron-location path="{{path}}" hash="{{hash}}" query="{{query}}" dwell-time="{{dwellTime}}">
       </iron-location>
 
       <div class="container">
@@ -68,12 +71,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="history_entries">
           <h3>Dwell Time</h3>
           <p>
-            iron-location won't add extraneous entries to the browser's history
-            when changes come in quick succession.
+            iron-location won't add extraneous entries to the browser's history when changes come in quick succession.
           </p>
           <p>
-            A new history entry will only be added if iron-location stays in
-            the same state longer than dwellTime.
+            A new history entry will only be added if iron-location stays in the same state longer than dwellTime.
           </p>
           <div>
             <label>History added: </label>
@@ -83,13 +84,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <label>Dwell time:</label>
             {{inSeconds(dwellTime)}}s
           </div>
-          <input type="range" min="-1" max="5000" step="100"
-                        value="{{dwellTime::input}}">
+          <input type="range" min="-1" max="5000" step="100" value="{{dwellTime::input}}">
         </div>
       </div>
     </template>
     <script>
-      window.addEventListener('WebComponentsReady', function() {
+      window.addEventListener('WebComponentsReady', function () {
         Polymer({
           is: 'iron-location-demo',
           properties: {
@@ -106,16 +106,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             'checkHistorySize(path, hash, query, startingHistoryLength)'
           ],
 
-          ready: function() {
+          ready: function () {
             this.startingHistoryLength = window.history.length;
           },
 
-          checkHistorySize: function() {
+          checkHistorySize: function () {
             this.historyElementsAdded =
-                window.history.length - this.startingHistoryLength;
+              window.history.length - this.startingHistoryLength;
           },
 
-          inSeconds: function(dwellTime) {
+          inSeconds: function (dwellTime) {
             if (dwellTime === -1 || dwellTime === undefined) {
               return -1;
             }
@@ -129,4 +129,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <iron-location-demo></iron-location-demo>
 </body>
+
 </html>

@@ -31,7 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value: 'on-attached-default-value'
       }
     },
-    attached: function() {
+    attached: function () {
       if (this.val === 'on-attached-default-value') {
         this.val = 'on-attached';
       }
@@ -48,7 +48,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     },
 
-    ready: function() {
+    ready: function () {
       this.val = 'on-ready';
     }
   });
@@ -62,8 +62,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value: 'on-timeout-default-value'
       }
     },
-    attached: function() {
-      setTimeout(function() {
+    attached: function () {
+      setTimeout(function () {
         this.val = 'on-timeout';
       }.bind(this), 10);
     }
@@ -76,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-location query='{{val}}'></iron-location>
 
   </template>
-  <script>Polymer({is: 'default-before', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'default-before', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id='attached-before'>
@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <on-attached val='{{val}}'></on-attached>
     <iron-location query='{{val}}'></iron-location>
   </template>
-  <script>Polymer({is: 'attached-before', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'attached-before', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id="ready-before">
@@ -107,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <on-timeout val='{{val}}'></on-timeout>
     <iron-location query='{{val}}'></iron-location>
   </template>
-  <script>Polymer({is: 'timeout-before', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'timeout-before', properties: { val: { type: String } } });</script>
 </dom-module>
 
 
@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-location query='{{val}}'></iron-location>
     <default-value value='{{val}}'></default-value>
   </template>
-  <script>Polymer({is: 'default-after', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'default-after', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id='attached-after'>
@@ -124,7 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-location query='{{val}}'></iron-location>
     <on-attached val='{{val}}'></on-attached>
   </template>
-  <script>Polymer({is: 'attached-after', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'attached-after', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id="ready-after">
@@ -147,7 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-location query='{{val}}'></iron-location>
     <on-timeout val='{{val}}'></on-timeout>
   </template>
-  <script>Polymer({is: 'timeout-after', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'timeout-after', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id='default-below'>
@@ -156,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <default-value value='{{val}}'></default-value>
     </iron-location>
   </template>
-  <script>Polymer({is: 'default-below', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'default-below', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id='attached-below'>
@@ -165,7 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <on-attached val='{{val}}'></on-attached>
     </iron-location>
   </template>
-  <script>Polymer({is: 'attached-below', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'attached-below', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id="ready-below">
@@ -190,7 +190,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <on-timeout val='{{val}}'></on-timeout>
     </iron-location>
   </template>
-  <script>Polymer({is: 'timeout-below', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'timeout-below', properties: { val: { type: String } } });</script>
 </dom-module>
 
 
@@ -200,7 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-location query='{{val}}'></iron-location>
     </default-value>
   </template>
-  <script>Polymer({is: 'default-above', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'default-above', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id='attached-above'>
@@ -210,7 +210,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </iron-location>
     </on-attached>
   </template>
-  <script>Polymer({is: 'attached-above', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'attached-above', properties: { val: { type: String } } });</script>
 </dom-module>
 
 <dom-module id="ready-above">
@@ -235,7 +235,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-location query='{{val}}'></iron-location>
     </on-timeout>
   </template>
-  <script>Polymer({is: 'timeout-above', properties: {val: {type: String}}});</script>
+  <script>Polymer({ is: 'timeout-above', properties: { val: { type: String } } });</script>
 </dom-module>
 
 
@@ -246,7 +246,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'default-container',
-      properties: {val: {type: String, value: 'default-container-val'}}
+      properties: { val: { type: String, value: 'default-container-val' } }
     });
   </script>
 </dom-module>
@@ -258,8 +258,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     Polymer({
       is: 'attached-container',
-      properties: {val: {type: String, value: 'container-attached-default-val'}},
-      attached: function() {
+      properties: { val: { type: String, value: 'container-attached-default-val' } },
+      attached: function () {
         if (this.val === 'container-attached-default-val') {
           this.val = 'attached-container-val';
         }
@@ -278,7 +278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         val: String
       },
-      ready: function() {
+      ready: function () {
         this.val = 'ready-container-val';
       }
     });
@@ -290,17 +290,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-location query='{{val}}'></iron-location>
   </template>
   <script>Polymer({
-    is: 'timeout-container',
-    properties: {
-      val: {
-        type: String,
-        notify: true
+      is: 'timeout-container',
+      properties: {
+        val: {
+          type: String,
+          notify: true
+        }
+      },
+      attached: function () {
+        setTimeout(function () {
+          this.val = 'on-timeout';
+        }.bind(this), 10);
       }
-    },
-    attached: function() {
-      setTimeout(function() {
-        this.val = 'on-timeout';
-      }.bind(this), 10);
-    }
-  });</script>
+    });</script>
 </dom-module>
