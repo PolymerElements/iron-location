@@ -66,15 +66,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var ironLocation;
         var ironQueryParams;
 
-        setup(function (done) {
+        setup(function () {
           integration = fixture('Integration');
           ironLocation = integration.$.location;
           ironQueryParams = integration.$.queryParams;
 
-          cooldownFunction.call(this, done);
+          return cooldownFunction.call(this);
         });
 
-        teardown(cooldownFunction);
+        teardown(function () {
+          return cooldownFunction.call(this);
+        });
 
         test('propagations from location to iqp', function () {
           var queryEncodingExamples = {

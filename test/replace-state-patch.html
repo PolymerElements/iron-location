@@ -34,8 +34,10 @@
     }
 
     window.cooldownFunction = function (done) {
-      if (done) { done(); }
-      return Promise.resolve();
+      return new Promise(function (res) {
+        if (done) { done(); };
+        res();
+      });
     }
 
     var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
@@ -46,7 +48,7 @@
         var resolve;
         // this is for setups that return promises
         var cooledDown = new Promise(function (res) {
-          resolve = res
+          resolve = res;
         }).then(function () {
           if (done) {
             done();

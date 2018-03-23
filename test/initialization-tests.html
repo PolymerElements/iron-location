@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return cooldownFunction.call(this);
           }.bind(this));
         });
-        teardown(function (done) {
+        teardown(function () {
           if (iframe) {
             document.body.removeChild(iframe);
           }
@@ -126,7 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (e) {
             throw new Error('Error message from contained iframe: ' + e);
           }
-          cooldownFunction.call(this, done);
+          return cooldownFunction.call(this);
         });
         var cases = [
           'default-before', 'attached-before', 'ready-before',
