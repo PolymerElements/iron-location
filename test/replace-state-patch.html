@@ -1,81 +1,79 @@
 <script>
-  function __getRunnerWindow() {
-    var lastWindow;
-    var newWindow = window;
+  (function () {
+    function getRunnerWindow() {
+      var lastWindow;
+      var newWindow = window;
 
-    while (lastWindow != newWindow) {
-      lastWindow = newWindow;
-      newWindow = newWindow.parent;
+      while (lastWindow != newWindow) {
+        lastWindow = newWindow;
+        newWindow = newWindow.parent;
+      }
+
+      return newWindow;
+    };
+
+    var runnerWindow = getRunnerWindow();
+    /**
+    * Patches window.History.prototype.replaceState to count the number of times
+    * it has been called in `runnerWindow.replaceStateCount`
+    */
+    function patchReplaceState() {
+      if (typeof runnerWindow.replaceStateCount !== 'number') {
+        runnerWindow.replaceStateCount = 0;
+      }
+
+      var native = window.History.prototype.replaceState;
+
+      function patch() {
+
+        runnerWindow.replaceStateCount += 1;
+        return native.apply(window.history, arguments);
+      }
+
+      window.History.prototype.replaceState = patch;
     }
 
-    return newWindow;
-  };
-
-  var __runnerWindow = __getRunnerWindow();
-  /**
-  * Patches window.History.prorotype.replaceState to count the number of times
-  * it has been called in `__runnerWindow.replaceStateCount`
-  */
-  function patchReplaceState() {
-    if (typeof __runnerWindow.replaceStateCount !== 'number') {
-      __runnerWindow.replaceStateCount = 0;
+    window.cooldownFunction = function (done) {
+      if (done) { done(); }
+      return Promise.resolve();
     }
 
-    var native = window.History.prototype.replaceState;
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    var isSafari = /^Apple/.test(navigator.vendor);
 
-    function patch() {
-
-      __runnerWindow.replaceStateCount += 1;
-      return native.apply(window.history, arguments);
-    }
-
-    window.History.prototype.replaceState = patch;
-  }
-
-  var cooldownFunction = function (done) {
-    if (done) { done(); }
-    return Promise.resolve();
-  }
-
-  var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-  var isSafari = /^Apple/.test(navigator.vendor);
-
-  if (isChrome || isSafari) {
-    cooldownFunction = function (done, force) {
-      var resolve;
-      // this is for setups that return promises
-      var cooledDown = new Promise(function (res) { resolve = res });
-
-      console.log(__runnerWindow.replaceStateCount)
-
-      if (__runnerWindow.replaceStateCount > 90 || force) {
-        var cooldownPeriod = 30 * 1000;
-        this.timeout(cooldownPeriod + 5000);
-
-        var cooldownMessage = document.querySelector('#safari-cooldown');
-        cooldownMessage.removeAttribute('hidden');
-
-        setTimeout(function () {
-          cooldownMessage.setAttribute('hidden', 'hidden');
-          __runnerWindow.replaceStateCount = 0;
-
+    if (isChrome || isSafari) {
+      window.cooldownFunction = function (done, force) {
+        var resolve;
+        // this is for setups that return promises
+        var cooledDown = new Promise(function (res) {
+          resolve = res
+        }).then(function () {
           if (done) {
             done();
           }
+        });
 
+        if (runnerWindow.replaceStateCount > 90 || force) {
+          var cooldownPeriod = 30 * 1000;
+          this.timeout(cooldownPeriod + 5000);
+
+          var cooldownMessage = document.querySelector('#safari-cooldown');
+          cooldownMessage.removeAttribute('hidden');
+
+          setTimeout(function () {
+            cooldownMessage.setAttribute('hidden', 'hidden');
+            runnerWindow.replaceStateCount = 0;
+
+            resolve();
+          }, cooldownPeriod);
+        } else {
           resolve();
-        }, cooldownPeriod);
-      } else {
-        if (done) {
-          done();
         }
 
-        resolve();
-      }
+        return cooledDown;
+      };
 
-      return cooledDown;
-    };
-
-    patchReplaceState();
-  }
+      patchReplaceState();
+    }
+  })();
 </script>
