@@ -514,13 +514,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('<iron-location>', function () {
         var initialUrl;
-        setup(function (done) {
+        setup(function () {
           initialUrl = window.location.href;
-          cooldownFunction.call(this, done);
+          return cooldownFunction.call(this);
         });
-        teardown(function (done) {
+        teardown(function () {
           window.history.replaceState({}, '', initialUrl);
-          cooldownFunction.call(this, done);
+          return cooldownFunction.call(this);
         });
 
         suite('without a base URI', function () {
