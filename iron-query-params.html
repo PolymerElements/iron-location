@@ -56,8 +56,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       if (this._dontReact) {
         return;
       }
-      this.paramsString = this._encodeParams(this.paramsObject)
-          .replace(/%3F/g, '?').replace(/%2F/g, '/').replace(/'/g, '%27');
+      let _encParams = this._encodeParams(this.paramsObject)
+                .replace(/%3F/g, '?').replace(/%2F/g, '/').replace(/'/g, '%27');
+
+      //Only set paramsString if encoding return non empty object
+      if (_encParams) {
+          this.paramsString = _encParams;
+      }
     },
 
     _encodeParams: function(params) {
