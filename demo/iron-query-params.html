@@ -58,59 +58,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer({
           is: 'iron-query-params-demo',
           properties: {
-            params: {
-              observer: 'paramsChanged'
-            },
-
+            params: {observer: 'paramsChanged'},
+      
             paramsInvalid: {
               value: false,
             },
-
-            paramString: {
-              type: String,
-              observer: 'paramStringChanged'
-            },
-
-            stringifiedParams: {
-              type: String,
-              observer: 'stringifedParamsChanged'
-            }
+      
+            paramString: {type: String, observer: 'paramStringChanged'},
+      
+            stringifiedParams: {type: String, observer: 'stringifedParamsChanged'}
           },
-
+      
           paramStringChanged: function() {
-            if (this.ignore) { return; }
-
+            if (this.ignore) {
+              return;
+            }
+      
             this.ignore = true;
-
+      
             try {
               this.paramsInvalid = false;
-            } catch(_) {
+            } catch (_) {
               this.paramsInvalid = true;
             }
-
+      
             this.ignore = false;
           },
-
+      
           stringifedParamsChanged: function() {
-            if (this.ignore) { return; }
-
+            if (this.ignore) {
+              return;
+            }
+      
             this.ignore = true;
-
+      
             try {
               var newParamsObject = JSON.parse(this.stringifiedParams);
               this.$.queryParams.paramsObject = newParamsObject;
               this.paramsInvalid = false;
-
+      
             } catch (e) {
               this.paramsInvalid = true;
             }
-
+      
             this.ignore = false;
           },
-
+      
           paramsChanged: function() {
-            if (this.ignore) { return; }
-
+            if (this.ignore) {
+              return;
+            }
+      
             this.ignore = true;
             this.stringifiedParams = JSON.stringify(this.params);
             this.paramsInvalid = false;

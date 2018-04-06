@@ -26,7 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
     <script>
       'use strict';
-
+      
       function getIframe() {
         return new Promise(function(resolve, reject) {
           var iframe = document.createElement('iframe');
@@ -36,10 +36,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           iframe.src = './initialization-iframe.html';
           document.body.appendChild(iframe);
           iframe.addEventListener('error', reject);
-          result.then(function() {resolve(iframe)}, reject);
+          result.then(function() {
+            resolve(iframe)
+          }, reject);
         });
       }
-
+      
       function onMessage(iframe, callback) {
         var f = function(event) {
           if (event.source === iframe.contentWindow) {
@@ -51,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           window.removeEventListener('message', f);
         }
       }
-
+      
       function getMessageMatching(iframe, predicate) {
         var revoke = function() {};
         var result = new Promise(function(resolve, reject) {
@@ -64,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         result.then(revoke, revoke);
         return result;
       }
-
+      
       function getUrl(iframe) {
         var result = getMessageMatching(iframe, function(message) {
           return message.type === 'urlQueryResponse';
@@ -79,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         iframe.contentWindow.postMessage({type: 'urlQuery'}, '*');
         return result;
       }
-
+      
       function timePasses(ms) {
         return new Promise(function(resolve) {
           window.setTimeout(function() {
@@ -87,14 +89,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }, ms);
         });
       }
-
+      
       suite('<iron-location>\'s initialization', function() {
         var iframe;
         var error;
         setup(function() {
           return getIframe().then(function(i) {
             iframe = i;
-            function isError(m) {return m.type === 'error'}
+            function isError(m) {
+              return m.type === 'error'
+            }
             getMessageMatching(iframe, isError).then(function(m) {
               error = m.error;
             });
@@ -112,35 +116,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         });
         var cases = [
-          'default-before', 'attached-before', 'ready-before',
+          'default-before',
+          'attached-before',
+          'ready-before',
           // TODO: These tests are failing with Polymer 2 (#95).
           // 'default-after', 'attached-after', 'ready-after',
           // 'default-below', 'attached-below', 'ready-below',
-          'default-above', 'attached-above', 'ready-above',
-          'default-container', 'attached-container', 'ready-container'
+          'default-above',
+          'attached-above',
+          'ready-above',
+          'default-container',
+          'attached-container',
+          'ready-container'
         ];
         cases.forEach(function(caseName) {
-          test('the url takes priority in ' + caseName + ' initialization', function() {
-            return getUrl(iframe).then(function(url) {
-              expect(url.search).to.be.eq('');
-              iframe.contentWindow.postMessage({type: 'appendBody', tagName: caseName}, '*');
-              return timePasses(60).then(function() {return getUrl(iframe)});
-            }).then(function(url) {
-              expect(url.search).to.be.eq('');
-            });
-          });
+          test(
+              'the url takes priority in ' + caseName + ' initialization',
+              function() {
+                return getUrl(iframe)
+                    .then(function(url) {
+                      expect(url.search).to.be.eq('');
+                      iframe.contentWindow.postMessage(
+                          {type: 'appendBody', tagName: caseName}, '*');
+                      return timePasses(60).then(function() {
+                        return getUrl(iframe)
+                      });
+                    })
+                    .then(function(url) {
+                      expect(url.search).to.be.eq('');
+                    });
+              });
         });
-        var expectedFailureCases = ['timeout-before', 'timeout-after', 'timeout-below', 'timeout-above', 'timeout-container'];
+        var expectedFailureCases = [
+          'timeout-before',
+          'timeout-after',
+          'timeout-below',
+          'timeout-above',
+          'timeout-container'
+        ];
         expectedFailureCases.forEach(function(caseName) {
-          test('the url does not take priority in ' + caseName + ' initialization', function() {
-            return getUrl(iframe).then(function(url) {
-              expect(url.search).to.be.eq('');
-              iframe.contentWindow.postMessage({type: 'appendBody', tagName: caseName}, '*');
-              return timePasses(60).then(function() {return getUrl(iframe)});
-            }).then(function(url) {
-              expect(url.search).to.be.eq('?on-timeout');
-            });
-          });
+          test(
+              'the url does not take priority in ' + caseName + ' initialization',
+              function() {
+                return getUrl(iframe)
+                    .then(function(url) {
+                      expect(url.search).to.be.eq('');
+                      iframe.contentWindow.postMessage(
+                          {type: 'appendBody', tagName: caseName}, '*');
+                      return timePasses(60).then(function() {
+                        return getUrl(iframe)
+                      });
+                    })
+                    .then(function(url) {
+                      expect(url.search).to.be.eq('?on-timeout');
+                    });
+              });
         });
       });
     </script>

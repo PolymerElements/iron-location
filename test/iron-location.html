@@ -74,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script>
   'use strict';
-
+  
   function timePasses(ms) {
     return new Promise(function(resolve) {
       window.setTimeout(function() {
@@ -82,16 +82,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }, ms);
     });
   }
-
+  
   function makeAbsoluteUrl(path) {
     return window.location.protocol + '//' + window.location.host + path;
   }
-
+  
   // A window.history.replaceState wrapper that's smart about baseURI.
   function replaceState(path) {
     window.history.replaceState({}, '', makeAbsoluteUrl(path));
   }
-
+  
   /**
    * We run the iron location tests with a couple different page configurations
    * (e.g. with and withoug a base URI), so we define the test set as a function
@@ -114,15 +114,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('basic functionality with #hash urls', function() {
         // Initialized to the window location's hash.
         expect(window.location.hash).to.be.equal(urlElem.hash);
-
+  
         // Changing the urlElem's hash changes the URL
         urlElem.hash = '/lol/ok';
         expect(window.location.hash).to.be.equal('#/lol/ok');
-
+  
         // Changing the hash via normal means changes the urlElem.
         var anchor = document.createElement('a');
-        var base =
-            window.location.protocol + '//' + window.location.host +
+        var base = window.location.protocol + '//' + window.location.host +
             window.location.pathname;
         anchor.href = base + '#/wat';
         document.body.appendChild(anchor);
@@ -135,11 +134,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('basic functionality with paths', function() {
         // Initialized to the window location's path.
         expect(window.location.pathname).to.be.equal(urlElem.path);
-
+  
         // Changing the urlElem's path changes the URL
         urlElem.path = '/foo/bar';
         expect(window.location.pathname).to.be.equal('/foo/bar');
-
+  
         // Changing the path and sending a custom event on the window changes
         // the urlElem.
         replaceState('/baz');
@@ -161,10 +160,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           '/foo?xyz': '/foo%3Fxyz',
           '/foo\'bar\'baz': '/foo\'bar\'baz',
         };
-
+  
         for (var plainTextPath in pathEncodingExamples) {
           var encodedPath = pathEncodingExamples[plainTextPath];
-
+  
           urlElem.path = plainTextPath;
           expect(window.location.pathname).to.be.equal(encodedPath);
           expect(urlElem.path).to.be.equal(plainTextPath);
@@ -186,7 +185,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (typeof encodedHashes === 'string') {
             encodedHashes = [encodedHashes];
           }
-
+  
           urlElem.hash = plainTextHash;
           expect(encodedHashes).to.contain(window.location.hash);
           expect(urlElem.hash).to.be.equal(plainTextHash);
@@ -195,56 +194,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
       function testQuery(queryEncodingExamples, encodeSpaceAsPlusInQuery) {
         urlElem.encodeSpaceAsPlusInQuery = encodeSpaceAsPlusInQuery;
-
+  
         for (var plainTextQuery in queryEncodingExamples) {
           var encodedQueries = queryEncodingExamples[plainTextQuery];
-
+  
           var ironLocationQuery = encodedQueries.map(function(value) {
             return value.substring(1);
           });
-
+  
           expect(urlElem._initialized).to.be.eq(true);
           urlElem.query = plainTextQuery;
           expect(encodedQueries).to.contain(window.location.search);
           expect(ironLocationQuery).to.contain(urlElem.query);
           expect(ironLocationQuery).to.contain(makeTemporaryIronLocation().query);
-
+  
           urlElem.query = 'dummyValue';
           urlElem.query = ironLocationQuery[0];
-
+  
           expect(encodedQueries).to.contain(window.location.search);
           expect(ironLocationQuery).to.contain(urlElem.query);
           expect(ironLocationQuery).to.contain(makeTemporaryIronLocation().query);
         }
       }
-
+  
       test('dealing with queries with unusual characters', function() {
-        testQuery({
-          'foo': ['?foo'],
-          '': [''],
-          'foo bar': ['?foo%20bar'],
-          'foo#bar': ['?foo%23bar'],
-          'foo?bar': ['?foo?bar'],
-          '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
-          'foo/bar/baz': ['?foo/bar/baz']
-        }, false)
+        testQuery(
+            {
+              'foo': ['?foo'],
+              '': [''],
+              'foo bar': ['?foo%20bar'],
+              'foo#bar': ['?foo%23bar'],
+              'foo?bar': ['?foo?bar'],
+              '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
+              'foo/bar/baz': ['?foo/bar/baz']
+            },
+            false)
       });
-      test('dealing with queries with unusual characters - encodeSpaceAsPlusInQuery', function() {
-        testQuery({
-          '': [''],
-          'foo bar': ['?foo%20bar', '?foo+bar'],
-          'foo#bar': ['?foo%23bar'],
-          'foo+bar': ['?foo%2Bbar'],
-          'foo?bar': ['?foo?bar'],
-          '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
-          'foo/bar/baz': ['?foo/bar/baz']
-        }, true)
-      });
-
+      test(
+          'dealing with queries with unusual characters - encodeSpaceAsPlusInQuery',
+          function() {
+            testQuery(
+                {
+                  '': [''],
+                  'foo bar': ['?foo%20bar', '?foo+bar'],
+                  'foo#bar': ['?foo%23bar'],
+                  'foo+bar': ['?foo%2Bbar'],
+                  'foo?bar': ['?foo?bar'],
+                  '/foo\'bar\'baz': ['?/foo%27bar%27baz', '?/foo\'bar\'baz'],
+                  'foo/bar/baz': ['?foo/bar/baz']
+                },
+                true)
+          });
+  
       test('assigning to a relative path URL', function() {
         urlElem.path = '/foo/bar';
         expect(window.location.pathname).to.be.equal('/foo/bar');
-
+  
         // A relative path is treated as an absolute one, just with a
         // missing leading slash.
         urlElem.path = 'baz';
@@ -253,17 +258,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('basic functionality with ?key=value params', function() {
         // Initialized to the window location's params.
         expect(urlElem.query).to.be.eq('');
-
+  
         // Changing location.search and sending a custom event on the window
         // changes the urlElem.
         replaceState('/?greeting=hello&target=world');
         window.dispatchEvent(new CustomEvent('location-changed'));
         expect(urlElem.query).to.be.equal('greeting=hello&target=world');
-
+  
         // Changing the urlElem's query changes the URL.
         urlElem.query = 'greeting=hello&target=world&another=key';
-        expect(window.location.search).to.be.equal(
-            '?greeting=hello&target=world&another=key');
+        expect(window.location.search)
+            .to.be.equal('?greeting=hello&target=world&another=key');
       });
     });
     suite('does not spam the user\'s history', function() {
@@ -284,162 +289,167 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.history.replaceState = nativeReplaceState;
         window.history.pushState = nativePushState;
       });
-      test('when a change happens immediately after ' +
-           'the iron-location is attached', function() {
-        var ironLocation = fixture('Solo');
-        expect(pushStateCalls).to.be.equal(0);
-        expect(replaceStateCalls).to.be.equal(0);
-        ironLocation.path = '/foo';
-        expect(replaceStateCalls).to.be.equal(1);
-        expect(pushStateCalls).to.be.equal(0);
-    });
-
+      test(
+          'when a change happens immediately after ' +
+              'the iron-location is attached',
+          function() {
+            var ironLocation = fixture('Solo');
+            expect(pushStateCalls).to.be.equal(0);
+            expect(replaceStateCalls).to.be.equal(0);
+            ironLocation.path = '/foo';
+            expect(replaceStateCalls).to.be.equal(1);
+            expect(pushStateCalls).to.be.equal(0);
+          });
+  
       suite('when intercepting links', function() {
-      /**
-       * Clicks the given link while an iron-location element with the given
-       * urlSpaceRegex is in the same document. Returns whether the
-       * iron-location prevented the default behavior of the click.
-       *
-       * No matter what, it prevents the default behavior of the click itself
-       * to ensure that no navigation occurs (as that would interrupt
-       * running and reporting these tests!)
-       */
-      function isClickCaptured(anchor, urlSpaceRegex, location) {
-        var defaultWasPrevented;
-        function handler(event) {
-          expect(event.target).to.be.eq(anchor);
-          defaultWasPrevented = event.defaultPrevented;
-          event.preventDefault();
-          expect(event.defaultPrevented).to.be.eq(true);
+        /**
+         * Clicks the given link while an iron-location element with the given
+         * urlSpaceRegex is in the same document. Returns whether the
+         * iron-location prevented the default behavior of the click.
+         *
+         * No matter what, it prevents the default behavior of the click itself
+         * to ensure that no navigation occurs (as that would interrupt
+         * running and reporting these tests!)
+         */
+        function isClickCaptured(anchor, urlSpaceRegex, location) {
+          var defaultWasPrevented;
+          function handler(event) {
+            expect(event.target).to.be.eq(anchor);
+            defaultWasPrevented = event.defaultPrevented;
+            event.preventDefault();
+            expect(event.defaultPrevented).to.be.eq(true);
+          }
+          window.addEventListener('click', handler);
+          var ironLocation = fixture('Solo');
+          if (urlSpaceRegex != null) {
+            ironLocation.urlSpaceRegex = urlSpaceRegex;
+          }
+  
+          if (location) {
+            ironLocation.__location = location;
+          }
+  
+          document.body.appendChild(anchor);
+          anchor.click();
+          document.body.removeChild(anchor);
+          window.removeEventListener('click', handler);
+          return defaultWasPrevented;
         }
-        window.addEventListener('click', handler);
-        var ironLocation = fixture('Solo');
-        if (urlSpaceRegex != null) {
-          ironLocation.urlSpaceRegex = urlSpaceRegex;
-        }
-
-        if (location) {
-          ironLocation.__location = location;
-        }
-
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-        window.removeEventListener('click', handler);
-        return defaultWasPrevented;
-      }
-
-      test('simple link to / is intercepted', function() {
-        var anchor = document.createElement('a');
-        if (document.baseURI !== window.location.href) {
-          anchor.href = makeAbsoluteUrl('/');
-        } else {
-          anchor.href = '/';
-        }
-
-        expect(isClickCaptured(anchor)).to.be.eq(true);
-          expect(pushStateCalls).to.be.equal(1);
-      });
-
-      test('test http port 80 intercepted', function() {
-        var anchor = document.createElement('a');
-        anchor.href = 'http://www.example.com/hello/world'
-
-        var location = {
-          hash: '',
-          pathname: '',
-          search: '',
-          protocol: 'http:',
-          host: 'www.example.com',
-          href: 'http://www.example.com/',
-          origin: 'http://www.example.com'
-        };
-
-        expect(isClickCaptured(anchor, null, location)).to.be.eq(true);
-        expect(pushStateCalls).to.be.equal(1);
-      });
-
-      test('test https port 443 intercepted', function() {
-        var anchor = document.createElement('a');
-        anchor.href = 'https://www.google.com/hello/world'
-
-        var location = {
-          hash: '',
-          pathname: '',
-          search: '',
-          protocol: 'https:',
-          host: 'www.google.com',
-          href: 'https://www.google.com/',
-          origin: 'https://www.google.com'
-        };
-
-        expect(isClickCaptured(anchor, null, location)).to.be.eq(true);
-        expect(pushStateCalls).to.be.equal(1);
-      });
-
-      test('link that matches url space is intercepted', function() {
-        var anchor = document.createElement('a');
-        anchor.href = makeAbsoluteUrl('/foo');
-
-        expect(isClickCaptured(anchor, '/fo+')).to.be.eq(true);
-          expect(pushStateCalls).to.be.equal(1);
-      });
-
-      test('link that doesn\'t match url space isn\'t intercepted', function() {
-        var anchor = document.createElement('a');
-        anchor.href = makeAbsoluteUrl('/bar');
-
-        expect(isClickCaptured(anchor, '/fo+')).to.be.eq(false);
-          expect(pushStateCalls).to.be.equal(0);
-      });
-
-      test('link to another domain isn\'t intercepted', function() {
-        var anchor = document.createElement('a');
-        anchor.href = 'http://example.com/';
-
-        expect(isClickCaptured(anchor)).to.be.eq(false);
-          expect(pushStateCalls).to.be.equal(0);
-      });
-
-      test('a link with target=_blank isn\'t intercepted', function() {
-        var anchor = document.createElement('a');
-        anchor.href = makeAbsoluteUrl('/');
-        anchor.target = '_blank';
-
-        expect(isClickCaptured(anchor)).to.be.eq(false);
-          expect(pushStateCalls).to.be.equal(0);
-        });
-
-        test('a link with an href to the ' +
-             'current page shouldn\'t add to history.', function() {
+  
+        test('simple link to / is intercepted', function() {
           var anchor = document.createElement('a');
-          anchor.href = window.location.href;
-
-          // The click is captured, but it doesn't add to history.
-          expect(isClickCaptured(anchor)).to.be.equal(true);
+          if (document.baseURI !== window.location.href) {
+            anchor.href = makeAbsoluteUrl('/');
+          } else {
+            anchor.href = '/';
+          }
+  
+          expect(isClickCaptured(anchor)).to.be.eq(true);
+          expect(pushStateCalls).to.be.equal(1);
+        });
+  
+        test('test http port 80 intercepted', function() {
+          var anchor = document.createElement('a');
+          anchor.href = 'http://www.example.com/hello/world'
+  
+          var location = {
+            hash: '',
+            pathname: '',
+            search: '',
+            protocol: 'http:',
+            host: 'www.example.com',
+            href: 'http://www.example.com/',
+            origin: 'http://www.example.com'
+          };
+  
+          expect(isClickCaptured(anchor, null, location)).to.be.eq(true);
+          expect(pushStateCalls).to.be.equal(1);
+        });
+  
+        test('test https port 443 intercepted', function() {
+          var anchor = document.createElement('a');
+          anchor.href = 'https://www.google.com/hello/world'
+  
+          var location = {
+            hash: '',
+            pathname: '',
+            search: '',
+            protocol: 'https:',
+            host: 'www.google.com',
+            href: 'https://www.google.com/',
+            origin: 'https://www.google.com'
+          };
+  
+          expect(isClickCaptured(anchor, null, location)).to.be.eq(true);
+          expect(pushStateCalls).to.be.equal(1);
+        });
+  
+        test('link that matches url space is intercepted', function() {
+          var anchor = document.createElement('a');
+          anchor.href = makeAbsoluteUrl('/foo');
+  
+          expect(isClickCaptured(anchor, '/fo+')).to.be.eq(true);
+          expect(pushStateCalls).to.be.equal(1);
+        });
+  
+        test('link that doesn\'t match url space isn\'t intercepted', function() {
+          var anchor = document.createElement('a');
+          anchor.href = makeAbsoluteUrl('/bar');
+  
+          expect(isClickCaptured(anchor, '/fo+')).to.be.eq(false);
           expect(pushStateCalls).to.be.equal(0);
         });
-
-        test('a click that has already been defaultPrevented ' +
-             'shouldn\'t result in a navigation', function() {
-           fixture('Solo');
-           var anchor = document.createElement('a');
-           anchor.href = makeAbsoluteUrl('/');
-           anchor.addEventListener('click', function(event) {
-             event.preventDefault();
-           });
-           document.body.appendChild(anchor);
-
-           var originalPushState = window.history.pushState;
-           var count = 0;
-           window.history.pushState = function() {
-             count++;
-           }
-           anchor.click();
-           window.history.pushState = originalPushState;
-
-           expect(count).to.be.equal(0);
+  
+        test('link to another domain isn\'t intercepted', function() {
+          var anchor = document.createElement('a');
+          anchor.href = 'http://example.com/';
+  
+          expect(isClickCaptured(anchor)).to.be.eq(false);
+          expect(pushStateCalls).to.be.equal(0);
         });
+  
+        test('a link with target=_blank isn\'t intercepted', function() {
+          var anchor = document.createElement('a');
+          anchor.href = makeAbsoluteUrl('/');
+          anchor.target = '_blank';
+  
+          expect(isClickCaptured(anchor)).to.be.eq(false);
+          expect(pushStateCalls).to.be.equal(0);
+        });
+  
+        test(
+            'a link with an href to the ' +
+                'current page shouldn\'t add to history.',
+            function() {
+              var anchor = document.createElement('a');
+              anchor.href = window.location.href;
+  
+              // The click is captured, but it doesn't add to history.
+              expect(isClickCaptured(anchor)).to.be.equal(true);
+              expect(pushStateCalls).to.be.equal(0);
+            });
+  
+        test(
+            'a click that has already been defaultPrevented ' +
+                'shouldn\'t result in a navigation',
+            function() {
+              fixture('Solo');
+              var anchor = document.createElement('a');
+              anchor.href = makeAbsoluteUrl('/');
+              anchor.addEventListener('click', function(event) {
+                event.preventDefault();
+              });
+              document.body.appendChild(anchor);
+  
+              var originalPushState = window.history.pushState;
+              var count = 0;
+              window.history.pushState = function() {
+                count++;
+              } anchor.click();
+              window.history.pushState = originalPushState;
+  
+              expect(count).to.be.equal(0);
+            });
       });
     });
     suite('when used with other iron-location elements', function() {
@@ -457,18 +467,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       test('coordinate their changes (by firing events on window)', function() {
         assertHaveSameUrls(urlElem, otherUrlElem);
-
+  
         urlElem.path = '/a/b/c';
         assertHaveSameUrls(urlElem, otherUrlElem);
-
+  
         otherUrlElem.query = 'alsdkjflaksjfd=alksjfdlkajsdfl';
         assertHaveSameUrls(urlElem, otherUrlElem);
-
+  
         urlElem.hash = 'lkjljifosjkldfjlksjfldsjf';
         assertHaveSameUrls(urlElem, otherUrlElem);
       });
     });
-
+  
     suite('supports doing synchronous redirection', function() {
       test('of the hash portion of the URL', function() {
         expect(window.location.hash).to.be.equal('');
@@ -479,7 +489,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         expect(window.location.hash).to.be.equal('#redirectedTo');
         expect(redirector.hash).to.be.equal('redirectedTo');
       });
-
+  
       test('of the path portion of the URL', function() {
         expect(window.location.pathname).to.not.be.equal('/redirectedTo');
         var redirector = fixture('RedirectPath');
@@ -489,7 +499,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         expect(window.location.pathname).to.be.equal('/redirectedTo');
         expect(redirector.path).to.be.equal('/redirectedTo');
       });
-
+  
       test('of the query portion of the URL', function() {
         expect(window.location.search).to.not.be.equal('?redirectedTo');
         var redirector = fixture('RedirectQuery');
@@ -501,16 +511,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
   }
-
-  suite('<iron-location>', function () {
+  
+  suite('<iron-location>', function() {
     var initialUrl;
     setup(function() {
       initialUrl = window.location.href;
     });
-    teardown(function(){
+    teardown(function() {
       window.history.replaceState({}, '', initialUrl);
     });
-
+  
     // This is as dumb as it looks. See #safari-cooldown in the dom above.
     var cooldownFunction = function() {};
     if (/^Apple/.test(navigator.vendor)) {
@@ -525,13 +535,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }, cooldownPeriod);
       };
     }
-
+  
     suite('without a base URI', function() {
       ironLocationTests();
-
+  
       suiteTeardown(cooldownFunction);
     });
   });
-
 </script>
 </body>

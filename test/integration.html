@@ -37,9 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
     <script>
       HTMLImports.whenReady(function() {
-        Polymer({
-          is: 'integration-element'
-        });
+        Polymer({is: 'integration-element'});
       });
     </script>
   </dom-module>
@@ -52,19 +50,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     'use strict';
-
-    suite('Integration tests', function () {
-
+    
+    suite('Integration tests', function() {
       var integration;
       var ironLocation;
       var ironQueryParams;
-
+    
       setup(function() {
         integration = fixture('Integration');
         ironLocation = integration.$.location;
         ironQueryParams = integration.$.queryParams;
       });
-
+    
       test('propagations from location to iqp', function() {
         var queryEncodingExamples = {
           'foo': '?foo',
@@ -86,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               return value.substring(1);
             });
           }
-
+    
           ironLocation.query = plainTextQuery;
           expect(encodedQueries).to.contain(window.location.search);
           expect(ironLocationQuery).to.contain(ironLocation.query);
@@ -98,7 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
       });
-
+    
       test('propagations from iqp to location', function() {
         var queryEncodingExamples = {
           'foo': '?foo',
@@ -120,16 +117,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               return value.substring(1);
             });
           }
-
+    
           var newParamsObject = {};
           newParamsObject[plainTextQuery] = '';
-
+    
           ironQueryParams.paramsObject = newParamsObject;
           expect(encodedQueries).to.contain(window.location.search);
           expect(ironLocationQuery).to.contain(ironLocation.query);
         }
       });
     });
-
   </script>
 </body>

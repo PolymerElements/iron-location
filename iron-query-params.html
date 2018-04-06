@@ -13,17 +13,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script>
   'use strict';
-
+  
   Polymer({
     is: 'iron-query-params',
-
+  
     properties: {
       paramsString: {
         type: String,
         notify: true,
         observer: 'paramsStringChanged',
       },
-
+  
       paramsObject: {
         type: Object,
         notify: true,
@@ -31,55 +31,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return {};
         }
       },
-
-      _dontReact: {
-        type: Boolean,
-        value: false
-      }
+  
+      _dontReact: {type: Boolean, value: false}
     },
-
-    hostAttributes: {
-      hidden: true
-    },
-
-    observers: [
-      'paramsObjectChanged(paramsObject.*)'
-    ],
-
+  
+    hostAttributes: {hidden: true},
+  
+    observers: ['paramsObjectChanged(paramsObject.*)'],
+  
     paramsStringChanged: function() {
       this._dontReact = true;
       this.paramsObject = this._decodeParams(this.paramsString);
       this._dontReact = false;
     },
-
+  
     paramsObjectChanged: function() {
       if (this._dontReact) {
         return;
       }
       this.paramsString = this._encodeParams(this.paramsObject)
-          .replace(/%3F/g, '?').replace(/%2F/g, '/').replace(/'/g, '%27');
+                              .replace(/%3F/g, '?')
+                              .replace(/%2F/g, '/')
+                              .replace(/'/g, '%27');
     },
-
+  
     _encodeParams: function(params) {
       var encodedParams = [];
-
+  
       for (var key in params) {
         var value = params[key];
-
+  
         if (value === '') {
           encodedParams.push(encodeURIComponent(key));
-
+  
         } else if (value) {
           encodedParams.push(
-              encodeURIComponent(key) +
-              '=' +
-              encodeURIComponent(value.toString())
-          );
+              encodeURIComponent(key) + '=' +
+              encodeURIComponent(value.toString()));
         }
       }
       return encodedParams.join('&');
     },
-
+  
     _decodeParams: function(paramString) {
       var params = {};
       // Work around a bug in decodeURIComponent where + is not
