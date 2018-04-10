@@ -43,10 +43,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </iron-query-params>
     </template>
     <script>
-      HTMLImports.whenReady(function () {
-        Polymer({
-          is: 'integration-element'
-        });
+      HTMLImports.whenReady(function() {
+        Polymer({is: 'integration-element'});
       });
     </script>
   </dom-module>
@@ -60,13 +58,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     'use strict';
 
-    window.addEventListener('WebComponentsReady', function () {
-      suite('Integration tests', function () {
+    window.addEventListener('WebComponentsReady', function() {
+      suite('Integration tests', function() {
         var integration;
         var ironLocation;
         var ironQueryParams;
 
-        setup(function () {
+        setup(function() {
           integration = fixture('Integration');
           ironLocation = integration.$.location;
           ironQueryParams = integration.$.queryParams;
@@ -74,11 +72,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return cooldownFunction.call(this);
         });
 
-        teardown(function () {
+        teardown(function() {
           return cooldownFunction.call(this);
         });
 
-        test('propagations from location to iqp', function () {
+        test('propagations from location to iqp', function() {
           var queryEncodingExamples = {
             'foo': '?foo',
             '': '',
@@ -95,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               encodedQueries = [encodedQueries];
               ironLocationQuery = [ironLocationQuery.substring(1)];
             } else {
-              ironLocationQuery = ironLocationQuery.map(function (value) {
+              ironLocationQuery = ironLocationQuery.map(function(value) {
                 return value.substring(1);
               });
             }
@@ -112,7 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         });
 
-        test('propagations from iqp to location', function () {
+        test('propagations from iqp to location', function() {
           var queryEncodingExamples = {
             'foo': '?foo',
             '': '',
@@ -129,7 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               encodedQueries = [encodedQueries];
               ironLocationQuery = [ironLocationQuery.substring(1)];
             } else {
-              ironLocationQuery = ironLocationQuery.map(function (value) {
+              ironLocationQuery = ironLocationQuery.map(function(value) {
                 return value.substring(1);
               });
             }
