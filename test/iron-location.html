@@ -459,7 +459,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   var count = 0;
                   window.history.pushState = function() {
                     count++;
-                  } anchor.click();
+                  };
+                  anchor.click();
                   window.history.pushState = originalPushState;
 
                   expect(count).to.be.equal(0);
