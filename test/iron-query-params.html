@@ -57,7 +57,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         test('basic functionality with ?key=value params', function() {
           // Check initialization
           expect(paramsElem.paramsString).to.be.eq(undefined);
-          expect(paramsElem.paramsObject).to.deep.eq({});
+          expect(paramsElem.paramsObject).to.deep.eq(undefined);
 
           // Check the mapping from paramsString to paramsObject.
           paramsElem.paramsString = 'greeting=hello&target=world';
