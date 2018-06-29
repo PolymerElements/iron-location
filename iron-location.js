@@ -7,6 +7,10 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import '@polymer/polymer/polymer-legacy.js';
+
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 /**
 
 The `iron-location` element manages binding to and from the current URL.
@@ -46,52 +50,6 @@ milliseconds.
 @demo demo/index.html
 
  */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import '@polymer/polymer/polymer-legacy.js';
-
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
-
-var workingURL;
-
-var urlDoc, urlBase, anchor;
-
-/**
- * @param {string} path
- * @param {string=} base
- * @return {!URL|!HTMLAnchorElement}
- */
-function resolveURL(path, base) {
-  if (workingURL === undefined) {
-    workingURL = false;
-    try {
-      var u = new URL('b', 'http://a');
-      u.pathname = 'c%20d';
-      workingURL = (u.href === 'http://a/c%20d');
-      workingURL = workingURL &&
-          (new URL('http://www.google.com/?foo bar').href ===
-           'http://www.google.com/?foo%20bar');
-    } catch (e) {
-    }
-  }
-  if (workingURL) {
-    return new URL(path, base);
-  }
-  if (!urlDoc) {
-    urlDoc = document.implementation.createHTMLDocument('url');
-    urlBase = urlDoc.createElement('base');
-    urlDoc.head.appendChild(urlBase);
-    anchor = /** @type {HTMLAnchorElement}*/ (urlDoc.createElement('a'));
-  }
-  urlBase.href = base;
-  anchor.href = path.replace(/ /g, '%20');
-  return anchor;
-}
-
 Polymer({
   is: 'iron-location',
 
@@ -239,6 +197,10 @@ Polymer({
         partiallyEncodedQuery = partiallyEncodedQuery.replace(/\+/g, '%2B')
                                     .replace(/ /g, '+')
                                     .replace(/%20/g, '+');
+      } else {
+        // required for edge
+        partiallyEncodedQuery = partiallyEncodedQuery.replace(/\+/g, '%2B')
+                                    .replace(/ /g, '%20');
       }
     }
     var partiallyEncodedHash = '';
@@ -265,7 +227,7 @@ Polymer({
     var newUrl = this._getUrl();
     // Need to use a full URL in case the containing page has a base URI.
     var fullNewUrl =
-        resolveURL(
+        new URL(
             newUrl, this.__location.protocol + '//' + this.__location.host)
             .href;
     var now = window.performance.now();
@@ -373,9 +335,9 @@ Polymer({
     var url;
 
     if (document.baseURI != null) {
-      url = resolveURL(href, /** @type {string} */ (document.baseURI));
+      url = new URL(href, /** @type {string} */ (document.baseURI));
     } else {
-      url = resolveURL(href);
+      url = new URL(href);
     }
 
     var origin;
@@ -424,7 +386,7 @@ Polymer({
 
     // Need to use a full URL in case the containing page has a base URI.
     var fullNormalizedHref =
-        resolveURL(normalizedHref, this.__location.href).href;
+        new URL(normalizedHref, this.__location.href).href;
     return fullNormalizedHref;
   },
 
