@@ -22,8 +22,7 @@
     "wct-browser-legacy": "^1.0.1"
   },
   "scripts": {
-    "update-types": "bower install && gen-typescript-declarations --deleteExisting --outDir .",
-    "format": "webmat && npm run update-types"
+    "format": "webmat"
   },
   "version": "3.0.0-pre.20",
   "author": "The Polymer Authors",
