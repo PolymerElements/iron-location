@@ -1,16 +1,17 @@
 /**
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+This code may only be used under the BSD style license found at
+http://polymer.github.io/LICENSE.txt The complete set of authors may be found at
+http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
+found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
+part of the polymer project is also subject to an additional IP rights grant
+found at http://polymer.github.io/PATENTS.txt
 */
 import '@polymer/polymer/polymer-legacy.js';
 
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import {dom} from '@polymer/polymer/lib/legacy/polymer.dom.js';
 /**
 
 The `iron-location` element manages binding to and from the current URL.
@@ -199,8 +200,8 @@ Polymer({
                                     .replace(/%20/g, '+');
       } else {
         // required for edge
-        partiallyEncodedQuery = partiallyEncodedQuery.replace(/\+/g, '%2B')
-                                    .replace(/ /g, '%20');
+        partiallyEncodedQuery =
+            partiallyEncodedQuery.replace(/\+/g, '%2B').replace(/ /g, '%20');
       }
     }
     var partiallyEncodedHash = '';
@@ -227,8 +228,7 @@ Polymer({
     var newUrl = this._getUrl();
     // Need to use a full URL in case the containing page has a base URI.
     var fullNewUrl =
-        new URL(
-            newUrl, this.__location.protocol + '//' + this.__location.host)
+        new URL(newUrl, this.__location.protocol + '//' + this.__location.host)
             .href;
     var now = window.performance.now();
     var shouldReplace = this._lastChangedAt + this.dwellTime > now;
@@ -385,8 +385,7 @@ Polymer({
     }
 
     // Need to use a full URL in case the containing page has a base URI.
-    var fullNormalizedHref =
-        new URL(normalizedHref, this.__location.href).href;
+    var fullNormalizedHref = new URL(normalizedHref, this.__location.href).href;
     return fullNormalizedHref;
   },
 
