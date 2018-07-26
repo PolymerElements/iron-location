@@ -29,23 +29,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <a href="https://codereview.chromium.org/2972073002">Chrome</a>
     </div>
   </div>
-  <dom-module id="integration-element">
-    <template>
-      <iron-location id="location" path="{{path}}" query="{{query}}" hash="{{hash}}">
-      </iron-location>
-      <iron-query-params id="queryParams" params-string="{{query}}" params-object="{{queryParams}}">
-      </iron-query-params>
-    </template>
-    <script type="module">
-      import '@polymer/polymer/polymer-legacy.js';
-      import '@polymer/promise-polyfill/promise-polyfill.js';
-      import '../iron-query-params.js';
-      import '../iron-location.js';
-      import './replace-state-patch.js';
-      import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
-      Polymer({is: 'integration-element'});
-    </script>
-  </dom-module>
 
   <test-fixture id="Integration">
     <template>
@@ -54,11 +37,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </test-fixture>
 
   <script type="module">
-    import '@polymer/polymer/polymer-legacy.js';
     import '@polymer/promise-polyfill/promise-polyfill.js';
     import '../iron-query-params.js';
     import '../iron-location.js';
     import './replace-state-patch.js';
+
+    import {html, Polymer} from '@polymer/polymer/polymer-legacy.js';
+
+    Polymer({
+      is: 'integration-element',
+
+      _template: html`
+        <iron-location
+            id="location"
+            path="{{path}}"
+            query="{{query}}"
+            hash="{{hash}}">
+        </iron-location>
+        <iron-query-params
+            id="queryParams"
+            params-string="{{query}}"
+            params-object="{{queryParams}}">
+        </iron-query-params>`,
+    });
+
     suite('Integration tests', function() {
       var integration;
       var ironLocation;
