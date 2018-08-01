@@ -8,6 +8,11 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
+<!--
+PLEASE NOTE: Due to a bug in polyserve and circular dependencies, this demo is
+not running with the local version of iron-location, but rather whatever is
+being served from /node_modules/@polymer/iron-location.
+-->
 <html>
 <head>
 
@@ -86,6 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
     <script type="module">
       import '@polymer/polymer/polymer-legacy.js';
+      // see note at top of file
       import '@polymer/iron-location/iron-location.js';
       import '@polymer/iron-flex-layout/iron-flex-layout.js';
       import '@polymer/iron-demo-helpers/url-bar.js';
