@@ -67,7 +67,7 @@ npm install --save @polymer/iron-location
         </iron-location>
         <iron-query-params
             id="queryParams"
-            params-string='{{paramString}}'
+            params-string='{{paramsString}}'
             params-object='{"userId": "polymer", "display": "dark"}'>
         </iron-query-params>
       </template>
