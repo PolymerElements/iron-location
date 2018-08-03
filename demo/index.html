@@ -8,11 +8,6 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<!--
-PLEASE NOTE: Due to a bug in polyserve and circular dependencies, this demo is
-not running with the local version of iron-location, but rather whatever is
-being served from /node_modules/@polymer/iron-location.
--->
 <html>
 <head>
 
@@ -22,6 +17,12 @@ being served from /node_modules/@polymer/iron-location.
 </head>
 <body>
   <url-bar></url-bar>
+
+  <div>
+    PLEASE NOTE: Due to a bug in polyserve and circular dependencies, this demo
+    is not running with the local version of iron-location, but rather whatever
+    is being served from /node_modules/@polymer/iron-location.
+  </div>
 
   <dom-module id="iron-location-demo">
     <template>
