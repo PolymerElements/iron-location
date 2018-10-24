@@ -53,6 +53,7 @@ milliseconds.
  */
 Polymer({
   is: 'iron-location',
+  _template: null,
 
   properties: {
     /**
