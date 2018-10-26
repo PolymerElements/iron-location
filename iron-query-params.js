@@ -16,6 +16,7 @@ import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
  */
 Polymer({
   is: 'iron-query-params',
+  _template: null,
 
   properties: {
     /**
