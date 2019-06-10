@@ -292,7 +292,7 @@ Polymer({
 
     // We don't want modified clicks, where the intent is to open the page
     // in a new tab.
-    if (event.metaKey || event.ctrlKey) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey) {
       return null;
     }
 
