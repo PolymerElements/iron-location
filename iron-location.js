@@ -53,6 +53,7 @@ milliseconds.
  */
 Polymer({
   is: 'iron-location',
+  /** @override */
   _template: null,
 
   properties: {
@@ -140,10 +141,12 @@ Polymer({
 
   observers: ['_updateUrl(path, query, hash)'],
 
+  /** @override */
   created: function() {
     this.__location = window.location;
   },
 
+  /** @override */
   attached: function() {
     this.listen(window, 'hashchange', '_hashChanged');
     this.listen(window, 'location-changed', '_urlChanged');
@@ -160,6 +163,7 @@ Polymer({
     this._urlChanged();
   },
 
+  /** @override */
   detached: function() {
     this.unlisten(window, 'hashchange', '_hashChanged');
     this.unlisten(window, 'location-changed', '_urlChanged');
