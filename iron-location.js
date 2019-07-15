@@ -126,6 +126,15 @@ Polymer({
     encodeSpaceAsPlusInQuery: {type: Boolean, value: false},
 
     /**
+     * Callback executed immediately before navigation. The callback is passed
+     * the URL to be navigated to, and should return true to allow the
+     * navigation or false to prevent it.
+     *
+     * @type {(?function(string):boolean)|undefined}
+     */
+    beforeLocationChange: {type: Object},
+
+    /**
      * urlSpaceRegex, but coerced into a regexp.
      *
      * @type {RegExp}
@@ -276,8 +285,10 @@ Polymer({
       return;
     }
 
-    window.history.pushState({}, '', href);
-    this.fire('location-changed', {}, {node: window});
+    if (!this.beforeLocationChange || this.beforeLocationChange(href)) {
+      window.history.pushState({}, '', href);
+      this.fire('location-changed', {}, {node: window});
+    }
   },
 
   /**
